@@ -6,11 +6,13 @@
 
 import { type Action, type VNode, h, text } from 'hyperapp';
 import type { AppState } from '.';
+import { FibonacciAlgorithm } from './algorithms';
 
 export type IntInputState = {
   raw: string;
   int?: number;
   valid: boolean;
+  algorithm: FibonacciAlgorithm;
 };
 
 export function defaultIntInputState(): IntInputState {
@@ -18,6 +20,7 @@ export function defaultIntInputState(): IntInputState {
     raw: '',
     int: undefined,
     valid: true,
+    algorithm: FibonacciAlgorithm.LinearBigInt,
   };
 }
 
@@ -35,6 +38,45 @@ const NewInput: Action<AppState, Event> = (state, event) => {
     },
   };
 };
+
+const NewAlgorithmSelected: Action<AppState, FibonacciAlgorithm> = (
+  state,
+  selected,
+) => {
+  return {
+    ...state,
+    input: {
+      ...state.input,
+      algorithm: selected,
+    },
+  };
+};
+
+function AlgorithmSelector(
+  currentAlgorithm: FibonacciAlgorithm,
+): VNode<AppState> {
+  const options: VNode<AppState>[] = [];
+  let i = 0;
+  for (const key in FibonacciAlgorithm) {
+    const algorithm =
+      FibonacciAlgorithm[key as keyof typeof FibonacciAlgorithm];
+    options.push(
+      h(
+        'option',
+        {
+          selected: algorithm === currentAlgorithm ? 'selected' : undefined,
+          onclick: [NewAlgorithmSelected, algorithm],
+        },
+        text(algorithm),
+      ),
+    );
+    i++;
+  }
+  return h('div', { class: 'field border no-round' }, [
+    h('select', {}, options),
+    h('label', {}, text('Algorithm')),
+  ]);
+}
 
 export const IntInput = (
   state: IntInputState,
@@ -57,6 +99,7 @@ export const IntInput = (
           : h('span', { class: 'error' }, text('Not an natural number!')),
       ],
     ),
+    AlgorithmSelector(state.algorithm),
     h(
       'button',
       { class: 'border right-round large fill', onclick: actionOnGo },

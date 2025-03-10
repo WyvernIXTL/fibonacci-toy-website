@@ -38,6 +38,9 @@ export function TextAreaWithCopy(
     [
       h('textarea', {
         value: state.value,
+        wrap: 'hard',
+        readonly: 'true',
+        style: { overflow: 'hidden', wordBreak: 'break-all' },
       }),
       footer,
     ],

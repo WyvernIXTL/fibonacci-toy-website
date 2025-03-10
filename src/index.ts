@@ -8,13 +8,13 @@ import 'beercss';
 import 'material-dynamic-colors';
 import { type Action, app, h, text } from 'hyperapp';
 
-import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
-import { fibonacciLinear } from './fibonacci-linear';
 import {
-  IntInput,
-  type IntInputState,
-  defaultIntInputState,
-} from './int-input';
+  FibonacciAlgorithm,
+  fibonacciLinear,
+  fibonacciLinearBigInt,
+} from './algorithms';
+import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
+import { IntInput, type IntInputState, defaultIntInputState } from './input';
 import { defaultProgressState } from './progress';
 
 export type AppState = {
@@ -62,8 +62,18 @@ const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
   },
   (dispatch) => {
     if (state.input.int) {
-      const result = fibonacciLinear(state.input.int);
-      const resultString = result.toString();
+      let result: number | bigint;
+      switch (state.input.algorithm) {
+        case FibonacciAlgorithm.Linear:
+          result = fibonacciLinear(state.input.int);
+          break;
+        case FibonacciAlgorithm.LinearBigInt:
+          result = fibonacciLinearBigInt(state.input.int);
+          break;
+      }
+      const resultString = result.toLocaleString('fullwide', {
+        useGrouping: false,
+      });
       dispatch([WriteValidResult, { number: resultString }]);
     } else {
       dispatch([WriteErrorResult, 'Input invalid.']);
