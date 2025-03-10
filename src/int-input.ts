@@ -1,4 +1,4 @@
-import { h, text, type Action, type VNode } from 'hyperapp';
+import { type Action, type VNode, h, text } from 'hyperapp';
 import type { AppState } from '.';
 
 export type IntInputState = {
@@ -34,7 +34,9 @@ export const IntInput = (state: IntInputState): VNode<AppState> => {
   return h('nav', { class: 'no-space' }, [
     h(
       'div',
-      { class: `field border left-round max ${state.valid ? '' : 'invalid'}` },
+      {
+        class: `field border left-round max ${state.valid ? '' : 'invalid'}`,
+      },
       [
         h('input', {
           type: 'number',

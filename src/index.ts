@@ -6,18 +6,19 @@
 
 import 'beercss';
 import 'material-dynamic-colors';
-import { h, text, app } from 'hyperapp';
+import { app, h, text } from 'hyperapp';
 
+import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
 import {
-  defaultIntInputState,
   IntInput,
   type IntInputState,
+  defaultIntInputState,
 } from './int-input';
 
 export type AppState = {
   calculating: boolean;
   input: IntInputState;
-  output?: number;
+  output?: FibonacciOutputState;
 };
 
 const root = document.querySelector('#root');
@@ -30,6 +31,7 @@ app<AppState>({
     h('main', { class: 'responsive' }, [
       h('h1', {}, text('Fibonacci Calculator')),
       IntInput(state.input),
+      state.output ? FibonacciOutput(state.output) : undefined,
     ]),
   init: {
     calculating: false,
