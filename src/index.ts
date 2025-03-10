@@ -8,11 +8,7 @@ import 'beercss';
 import 'material-dynamic-colors';
 import { type Action, app, h, text } from 'hyperapp';
 
-import {
-  FibonacciAlgorithm,
-  fibonacciLinear,
-  fibonacciLinearBigInt,
-} from './algorithms';
+import { FibonacciAlgorithm, fibonacciLinear } from './algorithms';
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
 import { IntInput, type IntInputState, defaultIntInputState } from './input';
 import { defaultProgressState } from './progress';
@@ -68,9 +64,6 @@ const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
       switch (state.input.algorithm) {
         case FibonacciAlgorithm.Linear:
           result = fibonacciLinear(state.input.int);
-          break;
-        case FibonacciAlgorithm.LinearBigInt:
-          result = fibonacciLinearBigInt(state.input.int);
           break;
       }
       const endTime = performance.now();
