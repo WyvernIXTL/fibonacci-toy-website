@@ -35,7 +35,7 @@ const WriteValidResult: Action<AppState, { number: string }> = (
   const newState = {
     ...state,
     output: {
-      //...state.output,
+      ...state.output,
       progress: { progressing: false },
       number: result.number,
     },
@@ -52,12 +52,12 @@ const WriteErrorResult: Action<AppState, string> = (state, errorMsg) => ({
   },
 });
 
-const HandleFibonacciCalculation: Action<AppState, Event> = (state, event) => [
+const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
   {
     ...state,
     output: {
       progress: { progressing: true },
-      nthNumber: `${state.input.int}`,
+      nthNumber: state.input.raw,
     },
   },
   (dispatch) => {

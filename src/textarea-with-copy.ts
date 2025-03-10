@@ -33,7 +33,7 @@ export function TextAreaWithCopy(
   return h(
     'div',
     {
-      class: `field textarea label border round large ${state.error ? 'invalid' : ''}`,
+      class: `field textarea round border extra ${state.error ? 'invalid' : ''}`,
     },
     [
       h('textarea', {
