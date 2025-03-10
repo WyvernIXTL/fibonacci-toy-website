@@ -9,15 +9,18 @@ import type { AppState } from '.';
 import { Progress, type ProgressState, defaultProgressState } from './progress';
 import { TextAreaWithCopy } from './textarea-with-copy';
 
-export function timeStringFromSeconds(secs: number): string {
-  const hours = Math.floor(secs / 60 / 60);
-  const minutes = Math.floor((secs / 60) % 60);
-  const seconds = Math.floor(secs % 60);
+export function timeStringFromMs(ms: number): string {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const milliseconds = ms % 1000;
 
   return (
     (hours ? `${hours}h` : '') +
     (minutes ? `${minutes}min` : '') +
-    (seconds ? `${seconds}s` : '')
+    (seconds ? `${seconds}s` : '') +
+    (milliseconds ? `${milliseconds}ms` : '')
   );
 }
 
@@ -25,7 +28,7 @@ export type FibonacciOutputState = {
   progress: ProgressState;
   number?: string;
   nthNumber?: string;
-  time?: number;
+  duration?: number;
   error?: string;
 };
 
@@ -34,17 +37,17 @@ export function defaultFibonacciOutputState(): FibonacciOutputState {
     progress: defaultProgressState(),
     number: undefined,
     nthNumber: undefined,
-    time: undefined,
+    duration: undefined,
     error: undefined,
   };
 }
 
 export function FibonacciOutput(state: FibonacciOutputState): VNode<AppState> {
   const nThNumberHelperPart = state.nthNumber
-    ? `${state.nthNumber}th Number in Fibonacci Sequence`
+    ? `${state.nthNumber}th number in fibonacci sequence`
     : '';
-  const timeStringHelperPart = state.time
-    ? `calculated in${timeStringFromSeconds(state.time)}`
+  const timeStringHelperPart = state.duration
+    ? `calculated in ${timeStringFromMs(state.duration)}`
     : '';
   const helper = `${nThNumberHelperPart}${nThNumberHelperPart && timeStringHelperPart ? ', ' : ''}${timeStringHelperPart}`;
 

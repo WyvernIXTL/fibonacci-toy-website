@@ -28,16 +28,17 @@ if (!root) {
   throw new Error('Failed getting root of html document.');
 }
 
-const WriteValidResult: Action<AppState, { number: string }> = (
-  state,
-  result,
-) => {
+const WriteValidResult: Action<
+  AppState,
+  { number: string; duration: number }
+> = (state, result) => {
   const newState = {
     ...state,
     output: {
       ...state.output,
       progress: { progressing: false },
       number: result.number,
+      duration: result.duration,
     },
   };
   return newState;
@@ -63,6 +64,7 @@ const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
   (dispatch) => {
     if (state.input.int) {
       let result: number | bigint;
+      const startTime = performance.now();
       switch (state.input.algorithm) {
         case FibonacciAlgorithm.Linear:
           result = fibonacciLinear(state.input.int);
@@ -71,10 +73,14 @@ const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
           result = fibonacciLinearBigInt(state.input.int);
           break;
       }
+      const endTime = performance.now();
       const resultString = result.toLocaleString('fullwide', {
         useGrouping: false,
       });
-      dispatch([WriteValidResult, { number: resultString }]);
+      dispatch([
+        WriteValidResult,
+        { number: resultString, duration: endTime - startTime },
+      ]);
     } else {
       dispatch([WriteErrorResult, 'Input invalid.']);
     }
