@@ -40,7 +40,7 @@ export function TextAreaWithCopy(
         value: state.value,
         wrap: 'hard',
         readonly: 'true',
-        style: { overflow: 'hidden', wordBreak: 'break-all' },
+        style: { wordBreak: 'break-all' },
       }),
       footer,
     ],
