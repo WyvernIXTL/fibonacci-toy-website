@@ -31,10 +31,21 @@ const NewInput: Action<AppState, Event> = (state, event) => {
 };
 
 export const IntInput = (state: IntInputState): VNode<AppState> => {
-  return h('div', { class: `field border ${state.valid ? '' : 'invalid'}` }, [
-    h('input', { type: 'number', oninput: NewInput, value: state.raw }),
-    state.valid
-      ? h('span', { class: 'helper' }, text('Which fibonacci?'))
-      : h('span', { class: 'error' }, text('Not an natural number!')),
+  return h('nav', { class: 'no-space' }, [
+    h(
+      'div',
+      { class: `field border left-round max ${state.valid ? '' : 'invalid'}` },
+      [
+        h('input', {
+          type: 'number',
+          oninput: NewInput,
+          value: state.raw,
+        }),
+        state.valid
+          ? h('span', { class: 'helper' }, text('Which fibonacci?'))
+          : h('span', { class: 'error' }, text('Not an natural number!')),
+      ],
+    ),
+    h('button', { class: 'border right-round large fill' }, text('Go')),
   ]);
 };
