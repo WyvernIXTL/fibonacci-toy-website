@@ -4,12 +4,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { type VNode, h, text } from 'hyperapp';
+import { type MaybeVNode, type VNode, h, text } from 'hyperapp';
 import type { AppState } from '.';
 
 export type TextAreaWithCopyState = {
   value: string;
   helper?: string;
+  error?: string;
 };
 
 export function defaultTextAreaWithCopyState(): TextAreaWithCopyState {
@@ -22,10 +23,23 @@ export function defaultTextAreaWithCopyState(): TextAreaWithCopyState {
 export function TextAreaWithCopy(
   state: TextAreaWithCopyState,
 ): VNode<AppState> {
-  return h('div', {}, [
-    h('textarea', {}),
-    state.helper
-      ? h('span', { class: 'helper' }, text(state.helper))
-      : undefined,
-  ]);
+  let footer: MaybeVNode<AppState> = undefined;
+  if (state.error) {
+    footer = h('span', { class: 'error' }, text(state.error));
+  } else if (state.helper) {
+    footer = h('span', { class: 'helper' }, text(state.helper));
+  }
+
+  return h(
+    'div',
+    {
+      class: `field textarea label border round large ${state.error ? 'invalid' : ''}`,
+    },
+    [
+      h('textarea', {
+        value: state.value,
+      }),
+      footer,
+    ],
+  );
 }

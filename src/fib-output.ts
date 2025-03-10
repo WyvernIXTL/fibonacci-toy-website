@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import type { VNode } from 'hyperapp';
+import { type VNode, h } from 'hyperapp';
 import type { AppState } from '.';
 import { Progress, type ProgressState, defaultProgressState } from './progress';
 import { TextAreaWithCopy } from './textarea-with-copy';
@@ -26,6 +26,7 @@ export type FibonacciOutputState = {
   number?: string;
   nthNumber?: string;
   time?: number;
+  error?: string;
 };
 
 export function defaultFibonacciOutputState(): FibonacciOutputState {
@@ -34,6 +35,7 @@ export function defaultFibonacciOutputState(): FibonacciOutputState {
     number: undefined,
     nthNumber: undefined,
     time: undefined,
+    error: undefined,
   };
 }
 
@@ -46,8 +48,18 @@ export function FibonacciOutput(state: FibonacciOutputState): VNode<AppState> {
     : '';
   const helper = `${nThNumberHelperPart}${nThNumberHelperPart && timeStringHelperPart ? ', ' : ''}${timeStringHelperPart}`;
 
-  return Progress(
-    state.progress,
-    TextAreaWithCopy({ value: `${state.number}`, helper: helper }),
+  console.log(state);
+
+  return h(
+    'div',
+    {},
+    Progress(
+      state.progress,
+      TextAreaWithCopy({
+        value: `${state.number ?? ''}`,
+        helper: helper,
+        error: state.error,
+      }),
+    ),
   );
 }

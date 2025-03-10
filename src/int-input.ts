@@ -36,7 +36,10 @@ const NewInput: Action<AppState, Event> = (state, event) => {
   };
 };
 
-export const IntInput = (state: IntInputState): VNode<AppState> => {
+export const IntInput = (
+  state: IntInputState,
+  actionOnGo: Action<AppState, Event>,
+): VNode<AppState> => {
   return h('nav', { class: 'no-space' }, [
     h(
       'div',
@@ -54,6 +57,10 @@ export const IntInput = (state: IntInputState): VNode<AppState> => {
           : h('span', { class: 'error' }, text('Not an natural number!')),
       ],
     ),
-    h('button', { class: 'border right-round large fill' }, text('Go')),
+    h(
+      'button',
+      { class: 'border right-round large fill', onclick: actionOnGo },
+      text('Go'),
+    ),
   ]);
 };

@@ -6,14 +6,16 @@
 
 import 'beercss';
 import 'material-dynamic-colors';
-import { app, h, text } from 'hyperapp';
+import { type Action, app, h, text } from 'hyperapp';
 
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
+import { fibonacciLinear } from './fibonacci-linear';
 import {
   IntInput,
   type IntInputState,
   defaultIntInputState,
 } from './int-input';
+import { defaultProgressState } from './progress';
 
 export type AppState = {
   calculating: boolean;
@@ -26,11 +28,55 @@ if (!root) {
   throw new Error('Failed getting root of html document.');
 }
 
+const WriteValidResult: Action<AppState, { number: string }> = (
+  state,
+  result,
+) => {
+  const newState = {
+    ...state,
+    output: {
+      //...state.output,
+      progress: { progressing: false },
+      number: result.number,
+    },
+  };
+  return newState;
+};
+
+const WriteErrorResult: Action<AppState, string> = (state, errorMsg) => ({
+  ...state,
+  output: {
+    ...state.output,
+    progress: defaultProgressState(),
+    error: errorMsg,
+  },
+});
+
+const HandleFibonacciCalculation: Action<AppState, Event> = (state, event) => [
+  {
+    ...state,
+    output: {
+      progress: { progressing: true },
+      nthNumber: `${state.input.int}`,
+    },
+  },
+  (dispatch) => {
+    if (state.input.int) {
+      const result = fibonacciLinear(state.input.int);
+      const resultString = result.toString();
+      dispatch([WriteValidResult, { number: resultString }]);
+    } else {
+      dispatch([WriteErrorResult, 'Input invalid.']);
+    }
+  },
+];
+
 app<AppState>({
   view: (state) =>
     h('main', { class: 'responsive' }, [
       h('h1', {}, text('Fibonacci Calculator')),
-      IntInput(state.input),
+      IntInput(state.input, HandleFibonacciCalculation),
+      h('div', { class: 'medium-space' }),
       state.output ? FibonacciOutput(state.output) : undefined,
     ]),
   init: {
