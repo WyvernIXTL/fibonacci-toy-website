@@ -12,19 +12,24 @@ export function Footer(): VNode<AppState> {
     'footer',
     { class: 'fixed' },
     h('nav', { class: 'center-align' }, [
-      h('a', { href: 'https://github.com/WyvernIXTL/fibonacci-toy-website/' }, [
-        h('i', { class: 'small-padding' }, text('gite')),
-        h('span', { class: '' }, text('Source')),
-      ]),
-      h('span', { class: '' }, text('-')),
       h(
         'a',
         {
-          href: 'https://media.githubusercontent.com/media/WyvernIXTL/fibonacci-toy-website/refs/heads/master/other/WEBSITE-LICENSES.txt',
+          href: 'https://github.com/WyvernIXTL/fibonacci-toy-website/',
+        },
+        [
+          h('i', { class: 'small-padding' }, text('gite')),
+          h('span', {}, text('Source')),
+        ],
+      ),
+      h(
+        'a',
+        {
+          href: './WEBSITE-LICENSES.txt',
         },
         [
           h('i', { class: 'small-padding' }, text('license')),
-          h('span', { class: '' }, text('Licenses')),
+          h('span', {}, text('Licenses')),
         ],
       ),
     ]),
