@@ -1,7 +1,10 @@
 [package]
 name = "fibonacci-toy-rs-4-web"
+description = "Simple fibonacci solver for web."
 version = "0.1.0"
+repository = "https://github.com/WyvernIXTL/fibonacci-toy-website"
 authors = ["Adam McKellar <dev@mckellar.eu>"]
+license = "MPL-2.0"
 edition = "2018"
 
 [lib]
