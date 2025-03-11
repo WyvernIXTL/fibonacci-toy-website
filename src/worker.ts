@@ -17,12 +17,6 @@ export type FromWorkerMessage = {
   duration: number;
 };
 
-function bigintToString(number: bigint | number): string {
-  return number.toLocaleString('fullwide', {
-    useGrouping: false,
-  });
-}
-
 self.onmessage = (event) => {
   const data = event.data as ToWorkerMessage;
   const n = data.n;
@@ -32,7 +26,7 @@ self.onmessage = (event) => {
   const startTime = performance.now();
   switch (algorithm) {
     case FibonacciAlgorithm.Linear:
-      result = bigintToString(fibonacciLinear(n));
+      result = fibonacciLinear(n).toString(10);
       break;
     case FibonacciAlgorithm.LinearRs:
       result = fibonacci_linear(n);
