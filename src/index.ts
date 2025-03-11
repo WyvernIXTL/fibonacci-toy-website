@@ -6,7 +6,14 @@
 
 import 'beercss';
 import 'material-dynamic-colors';
-import { type Action, app, h, text } from 'hyperapp';
+import {
+  type Action,
+  type Dispatch,
+  type Subscription,
+  app,
+  h,
+  text,
+} from 'hyperapp';
 
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
 import { Footer } from './footer';
@@ -103,9 +110,32 @@ const CancelCalculation: Action<AppState, Event> = () => {
 };
 
 const focusInput = () => {
-  console.log(document.getElementById('number-input'));
   document.getElementById('number-input')?.focus();
 };
+
+const enterKeySubscriber: Subscription<AppState> = [
+  (dispatch: Dispatch<AppState>) => {
+    const handler = (ev: KeyboardEvent) => {
+      const focusedInput = document.getElementById('number-input') ?? true;
+      if (ev.key === 'Enter' && focusedInput)
+        dispatch(HandleFibonacciCalculation);
+    };
+    addEventListener('keydown', handler);
+    return () => removeEventListener('keydown', handler);
+  },
+  undefined,
+];
+
+const escapeKeySubscriber: Subscription<AppState> = [
+  (dispatch: Dispatch<AppState>) => {
+    const handler = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape') dispatch(CancelCalculation);
+    };
+    addEventListener('keydown', handler);
+    return () => removeEventListener('keydown', handler);
+  },
+  undefined,
+];
 
 app<AppState>({
   view: (state) =>
@@ -130,5 +160,6 @@ app<AppState>({
       requestAnimationFrame(focusInput);
     },
   ],
+  subscriptions: (_state) => [enterKeySubscriber, escapeKeySubscriber],
   node: root,
 });
