@@ -10,6 +10,6 @@ export default defineConfig({
     lightningcssLoader: false,
   },
   output: {
-    assetPrefix: './static/',
+    assetPrefix: '/fibonacci-toy-website/',
   },
 });
