@@ -1,0 +1,29 @@
+name: Webpage
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compile-rust:
+    runs-on: ubuntu-latest
+    name: Compile Webpage
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup toolchain install stable
+      - run: rustup target add wasm32-unknown-unknown
+      - uses: oven-sh/setup-bun@v2
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/master' }}
+      - run: wasm-pack build --release
+        working-directory: ./fibonacci-toy-rs-4-web
+      - run: bun i
+      - run: bun run build
+      - name: Deploy Webpage
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./dist
+      
