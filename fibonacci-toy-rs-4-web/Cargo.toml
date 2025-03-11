@@ -34,4 +34,4 @@ codegen-units = 1
 
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ["-O3", "--enable-bulk-memory", "--fast-math"]
+wasm-opt = ["-O4", "--enable-bulk-memory", "--fast-math"]
