@@ -8,10 +8,11 @@ import 'beercss';
 import 'material-dynamic-colors';
 import { type Action, app, h, text } from 'hyperapp';
 
-import { FibonacciAlgorithm, fibonacciLinear } from './algorithms';
+const worker = new Worker(new URL('./worker.ts', import.meta.url));
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
 import { IntInput, type IntInputState, defaultIntInputState } from './input';
 import { defaultProgressState } from './progress';
+import type { FromWorkerMessage, ToWorkerMessage } from './worker';
 
 export type AppState = {
   calculating: boolean;
@@ -32,7 +33,7 @@ const WriteValidResult: Action<
     ...state,
     output: {
       ...state.output,
-      progress: { progressing: false },
+      progress: defaultProgressState(),
       number: result.number,
       duration: result.duration,
     },
@@ -59,21 +60,15 @@ const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
   },
   (dispatch) => {
     if (state.input.int) {
-      let result: number | bigint;
-      const startTime = performance.now();
-      switch (state.input.algorithm) {
-        case FibonacciAlgorithm.Linear:
-          result = fibonacciLinear(state.input.int);
-          break;
-      }
-      const endTime = performance.now();
-      const resultString = result.toLocaleString('fullwide', {
-        useGrouping: false,
-      });
-      dispatch([
-        WriteValidResult,
-        { number: resultString, duration: endTime - startTime },
-      ]);
+      worker.onmessage = (event) => {
+        const { result, duration }: FromWorkerMessage = event.data;
+        dispatch([WriteValidResult, { number: result, duration: duration }]);
+      };
+      const message: ToWorkerMessage = {
+        n: state.input.int,
+        algorithm: state.input.algorithm,
+      };
+      worker.postMessage(message);
     } else {
       dispatch([WriteErrorResult, 'Input invalid.']);
     }
