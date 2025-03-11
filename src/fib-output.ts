@@ -30,6 +30,7 @@ export type FibonacciOutputState = {
   nthNumber?: string;
   duration?: number;
   error?: string;
+  copied: boolean;
 };
 
 export function defaultFibonacciOutputState(): FibonacciOutputState {
@@ -39,6 +40,7 @@ export function defaultFibonacciOutputState(): FibonacciOutputState {
     nthNumber: undefined,
     duration: undefined,
     error: undefined,
+    copied: false,
   };
 }
 
@@ -57,6 +59,7 @@ export function FibonacciOutput(state: FibonacciOutputState): VNode<AppState> {
       value: `${state.number ?? ''}`,
       helper: helper,
       error: state.error,
+      copied: state.copied,
     }),
   );
 }

@@ -46,6 +46,7 @@ const WriteValidResult: Action<
       progress: defaultProgressState(),
       number: result.number,
       duration: result.duration,
+      copied: false,
     },
   };
   return newState;
@@ -61,6 +62,7 @@ const WriteErrorResult: Action<AppState, string> = (state, errorMsg) => ({
     ...state.output,
     progress: defaultProgressState(),
     error: errorMsg,
+    copied: false,
   },
 });
 
