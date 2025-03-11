@@ -6,6 +6,7 @@
 
 import { type Action, type MaybeVNode, type VNode, h, text } from 'hyperapp';
 import type { AppState } from '.';
+import { defaultProgressState } from './progress';
 
 export type TextAreaWithCopyState = {
   value: string;
@@ -30,6 +31,7 @@ const copyResultToClipboard: Action<AppState, Event> = (state) => {
     output: {
       ...state.output,
       copied: true,
+      progress: state.output?.progress ?? defaultProgressState(),
     },
   };
 };

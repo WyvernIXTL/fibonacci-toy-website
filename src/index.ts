@@ -76,6 +76,7 @@ const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
     output: {
       progress: { progressing: true },
       nthNumber: state.input.raw,
+      copied: false,
     },
   },
   (dispatch) => {
