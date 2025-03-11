@@ -4,8 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+// biome-ignore lint/correctness/useImportExtensions: <explanation>
 import { fibonacci_linear } from '../fibonacci-toy-rs-4-web/pkg';
-import { FibonacciAlgorithm, fibonacciLinear } from './algorithms';
+import { FibonacciAlgorithm, fibonacciLinear } from './algorithms.ts';
 
 export type ToWorkerMessage = {
   n: number;
@@ -31,6 +32,8 @@ self.onmessage = (event) => {
     case FibonacciAlgorithm.LinearRs:
       result = fibonacci_linear(n);
       break;
+    default:
+      result = '';
   }
   const endTime = performance.now();
   const duration = endTime - startTime;

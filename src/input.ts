@@ -5,8 +5,8 @@
  */
 
 import { type Action, type VNode, h, text } from 'hyperapp';
-import type { AppState } from '.';
-import { FibonacciAlgorithm } from './algorithms';
+import { FibonacciAlgorithm } from './algorithms.ts';
+import type { AppState } from './index.ts';
 
 export type IntInputState = {
   raw: string;
@@ -57,8 +57,6 @@ const NewAlgorithmSelected: Action<AppState, FibonacciAlgorithm> = (
 const NewAlgorithmOnChange: Action<AppState, Event> = (_state, event) => {
   const algorithm = (event.target as HTMLSelectElement)
     .value as FibonacciAlgorithm;
-  console.log(algorithm);
-  console.log(_state);
   return [NewAlgorithmSelected, algorithm];
 };
 
@@ -66,7 +64,6 @@ function AlgorithmSelector(
   currentAlgorithm: FibonacciAlgorithm,
 ): VNode<AppState> {
   const options: VNode<AppState>[] = [];
-  let i = 0;
   for (const key in FibonacciAlgorithm) {
     const algorithm =
       FibonacciAlgorithm[key as keyof typeof FibonacciAlgorithm];
@@ -79,7 +76,6 @@ function AlgorithmSelector(
         text(algorithm),
       ),
     );
-    i++;
   }
   return h('div', { class: 'field border no-round' }, [
     h('select', { onchange: NewAlgorithmOnChange }, options),
@@ -115,9 +111,9 @@ export const IntInput = (
       'button',
       {
         class: `border right-round large ${state.listenCancel ? 'error-text' : 'fill'}`,
-        onclick: !state.listenCancel ? actionOnGo : actionOnCancel,
+        onclick: state.listenCancel ? actionOnCancel : actionOnGo,
       },
-      !state.listenCancel ? text('Go') : text('Cancel'),
+      state.listenCancel ? text('Cancel') : text('Go'),
     ),
   ]);
 };

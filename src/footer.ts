@@ -5,7 +5,7 @@
  */
 
 import { type VNode, h, text } from 'hyperapp';
-import type { AppState } from '.';
+import type { AppState } from './index.ts';
 
 export function Footer(): VNode<AppState> {
   return h(

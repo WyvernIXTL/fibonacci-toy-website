@@ -5,17 +5,21 @@
  */
 
 import type { VNode } from 'hyperapp';
-import type { AppState } from '.';
-import { Progress, type ProgressState, defaultProgressState } from './progress';
-import { TextAreaWithCopy } from './textarea-with-copy';
+import type { AppState } from './index.ts';
+import {
+  Progress,
+  type ProgressState,
+  defaultProgressState,
+} from './progress.ts';
+import { TextAreaWithCopy } from './textarea-with-copy.ts';
 
 export function timeStringFromMs(ms: number): string {
-  const milisec = Math.round(ms);
-  const totalSeconds = Math.floor(milisec / 1000);
+  const msRounded = Math.round(ms);
+  const totalSeconds = Math.floor(msRounded / 1000);
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  const milliseconds = milisec % 1000;
+  const milliseconds = msRounded % 1000;
 
   return (
     (hours ? `${hours}h ` : '') +

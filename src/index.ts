@@ -15,11 +15,11 @@ import {
   text,
 } from 'hyperapp';
 
-import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
-import { Footer } from './footer';
-import { IntInput, type IntInputState, defaultIntInputState } from './input';
-import { defaultProgressState } from './progress';
-import type { FromWorkerMessage, ToWorkerMessage } from './worker';
+import { FibonacciOutput, type FibonacciOutputState } from './fib-output.ts';
+import { Footer } from './footer.ts';
+import { IntInput, type IntInputState, defaultIntInputState } from './input.ts';
+import { defaultProgressState } from './progress.ts';
+import type { FromWorkerMessage, ToWorkerMessage } from './worker.ts';
 
 export type AppState = {
   calculating: boolean;
@@ -117,8 +117,9 @@ const enterKeySubscriber: Subscription<AppState> = [
   (dispatch: Dispatch<AppState>) => {
     const handler = (ev: KeyboardEvent) => {
       const focusedInput = document.getElementById('number-input') ?? true;
-      if (ev.key === 'Enter' && focusedInput)
+      if (ev.key === 'Enter' && focusedInput) {
         dispatch(HandleFibonacciCalculation);
+      }
     };
     addEventListener('keydown', handler);
     return () => removeEventListener('keydown', handler);
@@ -129,7 +130,9 @@ const enterKeySubscriber: Subscription<AppState> = [
 const escapeKeySubscriber: Subscription<AppState> = [
   (dispatch: Dispatch<AppState>) => {
     const handler = (ev: KeyboardEvent) => {
-      if (ev.key === 'Escape') dispatch(CancelCalculation);
+      if (ev.key === 'Escape') {
+        dispatch(CancelCalculation);
+      }
     };
     addEventListener('keydown', handler);
     return () => removeEventListener('keydown', handler);
