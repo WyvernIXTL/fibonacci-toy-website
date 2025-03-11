@@ -10,11 +10,12 @@ import { Progress, type ProgressState, defaultProgressState } from './progress';
 import { TextAreaWithCopy } from './textarea-with-copy';
 
 export function timeStringFromMs(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
+  const milisec = Math.round(ms);
+  const totalSeconds = Math.floor(milisec / 1000);
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  const milliseconds = ms % 1000;
+  const milliseconds = milisec % 1000;
 
   return (
     (hours ? `${hours}h ` : '') +
@@ -49,7 +50,9 @@ export function FibonacciOutput(state: FibonacciOutputState): VNode<AppState> {
     ? `${state.nthNumber}th number in fibonacci sequence`
     : '';
   const timeStringHelperPart = state.duration
-    ? `calculated in ${timeStringFromMs(state.duration)}`
+    ? Math.round(state.duration)
+      ? `calculated in ${timeStringFromMs(state.duration)}`
+      : ''
     : '';
   const helper = `${nThNumberHelperPart}${nThNumberHelperPart && timeStringHelperPart ? ', ' : ''}${timeStringHelperPart}`;
 
