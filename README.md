@@ -13,11 +13,11 @@
 ### Prerequisites
 
 * [Rust](https://www.rust-lang.org/tools/install)
-* [`wasm32-unknown-unknown`](https://doc.rust-lang.org/nightly/rustc/platform-support/wasm32-unknown-unknown.html)
+* [`wasm32-unknown-unknown`](https://doc.rust-lang.org/nightly/rustc/platform-support/wasm32-unknown-unknown.html)  
   Installable via `rustup`: `rustup target add wasm32-unknown-unknown`
 * [Bun](https://bun.sh/)
-* [`wasm-pack`](https://rustwasm.github.io/wasm-pack/installer/)
-  Installable via `bun`: `bun install -g wasm-pack`
+* [`wasm-pack`](https://rustwasm.github.io/wasm-pack/installer/)  
+  Installable via `bun`: `bun install -g wasm-pack`  
   Installable via `cargo`: `cargo install wasm-pack`
 
 
