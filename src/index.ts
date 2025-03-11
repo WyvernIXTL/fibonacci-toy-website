@@ -102,6 +102,11 @@ const CancelCalculation: Action<AppState, Event> = () => {
   return [WriteErrorResult, 'Canceled calculation.'];
 };
 
+const focusInput = () => {
+  console.log(document.getElementById('number-input'));
+  document.getElementById('number-input')?.focus();
+};
+
 app<AppState>({
   view: (state) =>
     h('div', {}, [
@@ -115,10 +120,15 @@ app<AppState>({
       ]),
       Footer(),
     ]),
-  init: {
-    calculating: false,
-    input: defaultIntInputState(),
-    output: undefined,
-  },
+  init: [
+    {
+      calculating: false,
+      input: defaultIntInputState(),
+      output: undefined,
+    },
+    () => {
+      requestAnimationFrame(focusInput);
+    },
+  ],
   node: root,
 });

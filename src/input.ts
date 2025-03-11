@@ -103,6 +103,7 @@ export const IntInput = (
           type: 'number',
           oninput: NewInput,
           value: state.raw,
+          id: 'number-input',
         }),
         state.valid
           ? h(
