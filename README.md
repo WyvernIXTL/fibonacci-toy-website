@@ -20,6 +20,10 @@
   Installable via `bun`: `bun install -g wasm-pack`  
   Installable via `cargo`: `cargo install wasm-pack`
 
+### Change
+
+If you wish to deploy this webpage for yourself you'll likely need to change `assetPrefix` in [`./rsbuild.config.ts`](./rsbuild.config.ts).
+See [rsbuild docs](https://rsbuild.dev/guide/basic/static-deploy) for more.
 
 ### Build
 
