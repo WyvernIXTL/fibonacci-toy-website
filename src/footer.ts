@@ -17,10 +17,16 @@ export function Footer(): VNode<AppState> {
         h('span', { class: '' }, text('Source')),
       ]),
       h('span', { class: '' }, text('-')),
-      h('a', {}, [
-        h('i', { class: 'small-padding' }, text('license')),
-        h('span', { class: '' }, text('Licenses')),
-      ]),
+      h(
+        'a',
+        {
+          href: 'https://media.githubusercontent.com/media/WyvernIXTL/fibonacci-toy-website/refs/heads/master/other/WEBSITE-LICENSES.txt',
+        },
+        [
+          h('i', { class: 'small-padding' }, text('license')),
+          h('span', { class: '' }, text('Licenses')),
+        ],
+      ),
     ]),
   );
 }
