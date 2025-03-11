@@ -5,8 +5,8 @@
  */
 
 import { type Action, type MaybeVNode, type VNode, h, text } from 'hyperapp';
-import type { AppState } from '.';
-import { defaultProgressState } from './progress';
+import type { AppState } from './index.ts';
+import { defaultProgressState } from './progress.ts';
 
 export type TextAreaWithCopyState = {
   value: string;
@@ -24,8 +24,9 @@ export function defaultTextAreaWithCopyState(): TextAreaWithCopyState {
 }
 
 const copyResultToClipboard: Action<AppState, Event> = (state) => {
-  if (state.output?.number) navigator.clipboard?.writeText(state.output.number);
-  console.log('copy');
+  if (state.output?.number) {
+    navigator.clipboard?.writeText(state.output.number);
+  }
   return {
     ...state,
     output: {
@@ -39,7 +40,7 @@ const copyResultToClipboard: Action<AppState, Event> = (state) => {
 export function TextAreaWithCopy(
   state: TextAreaWithCopyState,
 ): VNode<AppState> {
-  let footer: MaybeVNode<AppState> = undefined;
+  let footer: MaybeVNode<AppState>;
   if (state.error) {
     footer = h('span', { class: 'error' }, text(state.error));
   } else if (state.helper) {
