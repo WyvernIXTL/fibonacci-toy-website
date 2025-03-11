@@ -1,5 +1,12 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": ["beercss", "hyperapp", "rustup", "Swatinem"]
+  "words": [
+    "beercss",
+    "hyperapp",
+    "lightningcss",
+    "rsbuild",
+    "rustup",
+    "Swatinem"
+  ]
 }
