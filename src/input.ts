@@ -106,11 +106,7 @@ export const IntInput = (
           id: 'number-input',
         }),
         state.valid
-          ? h(
-              'span',
-              { class: 'helper' },
-              text('Calculate n-th number of fibonacci sequence.'),
-            )
+          ? h('span', { class: 'helper' }, text('Which n-th fibonacci?'))
           : h('span', { class: 'error' }, text('Not an natural number!')),
       ],
     ),
