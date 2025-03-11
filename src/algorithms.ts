@@ -5,7 +5,8 @@
  */
 
 export enum FibonacciAlgorithm {
-  Linear = 'Linear',
+  Linear = 'Linear Javascript',
+  LinearRs = 'Linear Rust',
 }
 
 export function fibonacciLinear(n: number): bigint {

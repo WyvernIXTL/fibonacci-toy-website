@@ -4,6 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { fibonacci_linear } from '../fibonacci-toy-rs-4-web/pkg';
 import { FibonacciAlgorithm, fibonacciLinear } from './algorithms';
 
 export type ToWorkerMessage = {
@@ -16,22 +17,28 @@ export type FromWorkerMessage = {
   duration: number;
 };
 
+function bigintToString(number: bigint | number): string {
+  return number.toLocaleString('fullwide', {
+    useGrouping: false,
+  });
+}
+
 self.onmessage = (event) => {
   const data = event.data as ToWorkerMessage;
   const n = data.n;
   const algorithm = data.algorithm;
 
-  let result: number | bigint;
+  let result: string;
   const startTime = performance.now();
   switch (algorithm) {
     case FibonacciAlgorithm.Linear:
-      result = fibonacciLinear(n);
+      result = bigintToString(fibonacciLinear(n));
+      break;
+    case FibonacciAlgorithm.LinearRs:
+      result = fibonacci_linear(n);
       break;
   }
   const endTime = performance.now();
   const duration = endTime - startTime;
-  const resultString = result.toLocaleString('fullwide', {
-    useGrouping: false,
-  });
-  self.postMessage({ result: resultString, duration: duration });
+  self.postMessage({ result: result, duration: duration });
 };
