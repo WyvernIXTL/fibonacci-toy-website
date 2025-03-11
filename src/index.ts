@@ -9,6 +9,7 @@ import 'material-dynamic-colors';
 import { type Action, app, h, text } from 'hyperapp';
 
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
+import { Footer } from './footer';
 import { IntInput, type IntInputState, defaultIntInputState } from './input';
 import { defaultProgressState } from './progress';
 import type { FromWorkerMessage, ToWorkerMessage } from './worker';
@@ -100,11 +101,16 @@ const CancelCalculation: Action<AppState, Event> = () => {
 
 app<AppState>({
   view: (state) =>
-    h('main', { class: 'responsive' }, [
-      h('h1', {}, text('Fibonacci Calculator')),
-      IntInput(state.input, HandleFibonacciCalculation, CancelCalculation),
-      h('div', { class: 'medium-space' }),
-      state.output ? FibonacciOutput(state.output) : undefined,
+    h('div', {}, [
+      h('main', { class: 'responsive' }, [
+        h('div', { class: 'space' }),
+        h('h1', { class: 'small' }, text('Fibonacci Calculator')),
+        h('div', { class: 'space' }),
+        IntInput(state.input, HandleFibonacciCalculation, CancelCalculation),
+        h('div', { class: 'medium-space' }),
+        state.output ? FibonacciOutput(state.output) : undefined,
+      ]),
+      Footer(),
     ]),
   init: {
     calculating: false,
