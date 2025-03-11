@@ -13,6 +13,7 @@ export type IntInputState = {
   int?: number;
   valid: boolean;
   algorithm: FibonacciAlgorithm;
+  listenCancel: boolean;
 };
 
 export function defaultIntInputState(): IntInputState {
@@ -21,6 +22,7 @@ export function defaultIntInputState(): IntInputState {
     int: undefined,
     valid: true,
     algorithm: FibonacciAlgorithm.LinearRs,
+    listenCancel: false,
   };
 }
 
@@ -81,6 +83,7 @@ function AlgorithmSelector(
 export const IntInput = (
   state: IntInputState,
   actionOnGo: Action<AppState, Event>,
+  actionOnCancel: Action<AppState, Event>,
 ): VNode<AppState> => {
   return h('nav', { class: 'no-space' }, [
     h(
@@ -102,8 +105,11 @@ export const IntInput = (
     AlgorithmSelector(state.algorithm),
     h(
       'button',
-      { class: 'border right-round large fill', onclick: actionOnGo },
-      text('Go'),
+      {
+        class: `border right-round large ${state.listenCancel ? 'error-text' : 'fill'}`,
+        onclick: !state.listenCancel ? actionOnGo : actionOnCancel,
+      },
+      !state.listenCancel ? text('Go') : text('Cancel'),
     ),
   ]);
 };

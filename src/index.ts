@@ -8,7 +8,6 @@ import 'beercss';
 import 'material-dynamic-colors';
 import { type Action, app, h, text } from 'hyperapp';
 
-const worker = new Worker(new URL('./worker.ts', import.meta.url));
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output';
 import { IntInput, type IntInputState, defaultIntInputState } from './input';
 import { defaultProgressState } from './progress';
@@ -19,6 +18,12 @@ export type AppState = {
   input: IntInputState;
   output?: FibonacciOutputState;
 };
+
+function startWorker(): Worker {
+  return new Worker(new URL('./worker.ts', import.meta.url));
+}
+
+let worker: Worker = startWorker();
 
 const root = document.querySelector('#root');
 if (!root) {
@@ -31,6 +36,10 @@ const WriteValidResult: Action<
 > = (state, result) => {
   const newState = {
     ...state,
+    input: {
+      ...state.input,
+      listenCancel: false,
+    },
     output: {
       ...state.output,
       progress: defaultProgressState(),
@@ -43,6 +52,10 @@ const WriteValidResult: Action<
 
 const WriteErrorResult: Action<AppState, string> = (state, errorMsg) => ({
   ...state,
+  input: {
+    ...state.input,
+    listenCancel: false,
+  },
   output: {
     ...state.output,
     progress: defaultProgressState(),
@@ -53,6 +66,10 @@ const WriteErrorResult: Action<AppState, string> = (state, errorMsg) => ({
 const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
   {
     ...state,
+    input: {
+      ...state.input,
+      listenCancel: true,
+    },
     output: {
       progress: { progressing: true },
       nthNumber: state.input.raw,
@@ -75,11 +92,17 @@ const HandleFibonacciCalculation: Action<AppState, Event> = (state) => [
   },
 ];
 
+const CancelCalculation: Action<AppState, Event> = () => {
+  worker.terminate();
+  worker = startWorker();
+  return [WriteErrorResult, 'Canceled calculation.'];
+};
+
 app<AppState>({
   view: (state) =>
     h('main', { class: 'responsive' }, [
       h('h1', {}, text('Fibonacci Calculator')),
-      IntInput(state.input, HandleFibonacciCalculation),
+      IntInput(state.input, HandleFibonacciCalculation, CancelCalculation),
       h('div', { class: 'medium-space' }),
       state.output ? FibonacciOutput(state.output) : undefined,
     ]),
