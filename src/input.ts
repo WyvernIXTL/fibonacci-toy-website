@@ -54,6 +54,14 @@ const NewAlgorithmSelected: Action<AppState, FibonacciAlgorithm> = (
   };
 };
 
+const NewAlgorithmOnChange: Action<AppState, Event> = (_state, event) => {
+  const algorithm = (event.target as HTMLSelectElement)
+    .value as FibonacciAlgorithm;
+  console.log(algorithm);
+  console.log(_state);
+  return [NewAlgorithmSelected, algorithm];
+};
+
 function AlgorithmSelector(
   currentAlgorithm: FibonacciAlgorithm,
 ): VNode<AppState> {
@@ -67,7 +75,6 @@ function AlgorithmSelector(
         'option',
         {
           selected: algorithm === currentAlgorithm ? 'selected' : undefined,
-          onclick: [NewAlgorithmSelected, algorithm],
         },
         text(algorithm),
       ),
@@ -75,7 +82,7 @@ function AlgorithmSelector(
     i++;
   }
   return h('div', { class: 'field border no-round' }, [
-    h('select', {}, options),
+    h('select', { onchange: NewAlgorithmOnChange }, options),
     h('label', {}, text('Algorithm')),
   ]);
 }
