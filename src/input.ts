@@ -20,7 +20,7 @@ export function defaultIntInputState(): IntInputState {
     raw: '',
     int: undefined,
     valid: true,
-    algorithm: FibonacciAlgorithm.Linear,
+    algorithm: FibonacciAlgorithm.LinearRs,
   };
 }
 
