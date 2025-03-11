@@ -4,13 +4,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-mod utils;
-use utils::set_panic_hook;
-
-use num_bigint::{BigUint, ToBigUint};
 use std::mem::replace;
 
 use wasm_bindgen::prelude::*;
+
+use malachite::Natural;
+
+mod utils;
+use utils::set_panic_hook;
 
 #[wasm_bindgen]
 extern "C" {}
@@ -20,8 +21,8 @@ pub fn fibonacci_linear(n: u32) -> String {
     #[cfg(debug_assertions)]
     set_panic_hook();
 
-    let mut a: BigUint = 1.to_biguint().unwrap();
-    let mut b: BigUint = 1.to_biguint().unwrap();
+    let mut a = Natural::from(1u32);
+    let mut b = Natural::from(1u32);
 
     for _ in 2..n {
         let c = a + &b;
