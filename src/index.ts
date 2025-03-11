@@ -28,7 +28,7 @@ export type AppState = {
 };
 
 function startWorker(): Worker {
-  return new Worker(new URL('./worker.ts', import.meta.url));
+  return new Worker(new URL('./worker', import.meta.url));
 }
 
 let worker: Worker = startWorker();
