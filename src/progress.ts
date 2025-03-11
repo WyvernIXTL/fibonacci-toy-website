@@ -28,7 +28,10 @@ export function Progress(
   }
 
   if (!state.explicit) {
-    return h('progress', { class: 'circle large' });
+    return h('div', { class: 'center-align' }, [
+      h('div', { class: 'large-space' }),
+      h('progress', { class: 'circle large' }),
+    ]);
   }
 
   return h('progress', {

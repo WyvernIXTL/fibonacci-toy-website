@@ -17,9 +17,9 @@ export function timeStringFromMs(ms: number): string {
   const milliseconds = ms % 1000;
 
   return (
-    (hours ? `${hours}h` : '') +
-    (minutes ? `${minutes}min` : '') +
-    (seconds ? `${seconds}s` : '') +
+    (hours ? `${hours}h ` : '') +
+    (minutes ? `${minutes}min ` : '') +
+    (seconds ? `${seconds}s ` : '') +
     (milliseconds ? `${milliseconds}ms` : '')
   );
 }
