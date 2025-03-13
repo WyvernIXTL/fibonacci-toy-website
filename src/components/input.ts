@@ -164,6 +164,47 @@ class QuadraticSelection<State, Member> extends Component<State, Member> {
   }
 }
 
-class IntegerInputWithAlgorithmSelectionAndGoButton {
-  constructor() {}
+type NaturalInputLeftState = number | undefined | 'INIT';
+class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
+  readonly update: Action<State, Event> = (state, event) => {
+    const input = (event.target as HTMLInputElement).value;
+    const reg = /_*\-*\.*,*\s*/g;
+    const prunedInput = input.replace(reg, '');
+    const valid = prunedInput !== '';
+    const newState = valid ? Number.parseInt(prunedInput, 10) : undefined;
+    return this.set(state, newState);
+  };
+
+  render(state: NaturalInputLeftState): VNode<State> {
+    const valid = state !== undefined;
+    return h(
+      'div',
+      {
+        class: `field border left-round max ${valid && 'invalid'}`,
+      },
+      [
+        h('input', {
+          type: 'number',
+          oninput: this.update,
+          value: valid ? state : '',
+          id: 'number-input',
+        }),
+        state !== undefined
+          ? h('span', { class: 'helper' }, text('Which n-th fibonacci?'))
+          : h('span', { class: 'error' }, text('Not an natural number!')),
+      ],
+    );
+  }
+}
+
+class NumberInputWithSelectorGoAndCancelButton<
+  State,
+  SubState,
+> extends Component<State, SubState> {
+  constructor(
+    getterSetter: StateGetterSetter<State, SubState>,
+    inputFieldId: string,
+  ) {
+    super(getterSetter);
+  }
 }
