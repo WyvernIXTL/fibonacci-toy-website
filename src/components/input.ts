@@ -197,14 +197,37 @@ class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
   }
 }
 
+class GoCancelButtonRight<State> extends Component<State, boolean> {
+  private readonly onGoAction: Action<State, Event>;
+  private readonly onCancelAction: Action<State, Event>;
+
+  constructor(
+    getterSetter: StateGetterSetter<State, boolean>,
+    onGoAction: Action<State, Event>,
+    onCancelAction: Action<State, Event>,
+  ) {
+    super(getterSetter);
+    this.onGoAction = onGoAction;
+    this.onCancelAction = onCancelAction;
+  }
+
+  render(state: boolean): VNode<State> {
+    return h(
+      'button',
+      {
+        class: `border right-round large ${state ? 'error-text' : 'fill'}`,
+        onclick: state ? this.onCancelAction : this.onGoAction,
+      },
+      state ? text('Cancel') : text('Go'),
+    );
+  }
+}
+
 class NumberInputWithSelectorGoAndCancelButton<
   State,
   SubState,
 > extends Component<State, SubState> {
-  constructor(
-    getterSetter: StateGetterSetter<State, SubState>,
-    inputFieldId: string,
-  ) {
+  constructor(getterSetter: StateGetterSetter<State, SubState>) {
     super(getterSetter);
   }
 }
