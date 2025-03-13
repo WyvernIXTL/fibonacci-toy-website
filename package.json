@@ -2,7 +2,10 @@
   "name": "fibonacci-toy-website",
   "description": "One more webpage to calculate lucky numbers.",
   "version": "1.0.0",
-  "author": { "name": "Adam McKellar", "email": "dev@mckellar.eu" },
+  "author": {
+    "name": "Adam McKellar",
+    "email": "dev@mckellar.eu"
+  },
   "license": "MPL-2.0",
   "private": false,
   "type": "module",
@@ -17,6 +20,7 @@
     "@biomejs/biome": "^1.9.4",
     "@rsbuild/core": "^1.2.14",
     "@rsbuild/plugin-css-minimizer": "^1.0.2",
+    "cssnano-preset-advanced": "^7.0.6",
     "typescript": "^5.8.2"
   },
   "dependencies": {

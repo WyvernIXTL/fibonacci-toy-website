@@ -6,11 +6,24 @@ export default defineConfig({
   html: {
     title: 'Fibonacci Toy Website',
   },
-  plugins: [pluginCssMinimizer()],
+  plugins: [
+    pluginCssMinimizer({
+      pluginOptions: {
+        minimizerOptions: {
+          preset: require.resolve('cssnano-preset-advanced'),
+        },
+      },
+    }),
+  ],
   tools: {
     lightningcssLoader: false,
   },
   output: {
     assetPrefix: '/fibonacci-toy-website/',
+  },
+  performance: {
+    chunkSplit: {
+      strategy: 'split-by-module',
+    },
   },
 });
