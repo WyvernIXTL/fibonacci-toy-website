@@ -15,9 +15,13 @@ import {
   text,
 } from 'hyperapp';
 
+import {
+  type IntInputState,
+  IntegerInputWithAlgorithmSelectionAndGoButtonView,
+  defaultIntInputState,
+} from './components/input.ts';
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output.ts';
 import { Footer } from './footer.ts';
-import { IntInput, type IntInputState, defaultIntInputState } from './input.ts';
 import { defaultProgressState } from './progress.ts';
 import type { FromWorkerMessage, ToWorkerMessage } from './worker.ts';
 
@@ -147,7 +151,11 @@ app<AppState>({
         h('div', { class: 'space' }),
         h('h1', { class: 'small' }, text('Fibonacci Calculator')),
         h('div', { class: 'space' }),
-        IntInput(state.input, HandleFibonacciCalculation, CancelCalculation),
+        IntegerInputWithAlgorithmSelectionAndGoButtonView(
+          state.input,
+          HandleFibonacciCalculation,
+          CancelCalculation,
+        ),
         h('div', { class: 'medium-space' }),
         state.output ? FibonacciOutput(state.output) : undefined,
       ]),

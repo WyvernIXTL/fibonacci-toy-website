@@ -4,11 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-export enum FibonacciAlgorithm {
-  Linear = 'Linear Javascript',
-  LinearRs = 'Linear Rust',
-}
-
 export function fibonacciLinear(n: number): bigint {
   let a = 1n;
   let b = 1n;

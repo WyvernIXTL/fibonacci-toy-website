@@ -6,7 +6,10 @@
 
 // biome-ignore lint/correctness/useImportExtensions: <explanation>
 import { fibonacci_linear } from '../fibonacci-toy-rs-4-web/pkg';
-import { FibonacciAlgorithm, fibonacciLinear } from './algorithms.ts';
+import {
+  FibonacciAlgorithm,
+  fibonacciLinear,
+} from './types/FibonacciAlgorithm.ts';
 
 export type ToWorkerMessage = {
   n: number;

@@ -5,8 +5,8 @@
  */
 
 import { type Action, type VNode, h, text } from 'hyperapp';
-import { FibonacciAlgorithm } from './algorithms.ts';
-import type { AppState } from './index.ts';
+import type { AppState } from '../index.ts';
+import { FibonacciAlgorithm } from '../types/FibonacciAlgorithm.ts';
 
 export type IntInputState = {
   raw: string;
@@ -83,7 +83,7 @@ function AlgorithmSelector(
   ]);
 }
 
-export const IntInput = (
+export const IntegerInputWithAlgorithmSelectionAndGoButtonView = (
   state: IntInputState,
   actionOnGo: Action<AppState, Event>,
   actionOnCancel: Action<AppState, Event>,
@@ -117,3 +117,19 @@ export const IntInput = (
     ),
   ]);
 };
+
+class QuadraticSelection<Enum> {
+  public readonly selection: object;
+
+  constructor(selection: object) {
+    this.selection = selection;
+  }
+
+  public static new({getter: })
+}
+
+class IntegerInputWithAlgorithmSelectionAndGoButton {
+  constructor() {
+
+  }
+}
