@@ -7,6 +7,11 @@
 import { type Action, type VNode, h, text } from 'hyperapp';
 import type { AppState } from '../index.ts';
 import { FibonacciAlgorithm } from '../types/FibonacciAlgorithm.ts';
+import {
+  Component,
+  type ObjectEnum,
+  type StateGetterSetter,
+} from '../types/common.ts';
 
 export type IntInputState = {
   raw: string;
@@ -118,18 +123,47 @@ export const IntegerInputWithAlgorithmSelectionAndGoButtonView = (
   ]);
 };
 
-class QuadraticSelection<Enum> {
-  public readonly selection: object;
+class QuadraticSelection<State, Member> extends Component<State, Member> {
+  public readonly objectEnum: ObjectEnum<Member>;
 
-  constructor(selection: object) {
-    this.selection = selection;
+  constructor(
+    getterSetter: StateGetterSetter<State, Member>,
+    objectEnum: ObjectEnum<Member>,
+  ) {
+    super(getterSetter);
+    this.objectEnum = objectEnum;
   }
 
-  public static new({getter: })
+  readonly updateSelected: Action<State, Event> = (state, event): State => {
+    const newSelected = (event.target as HTMLSelectElement).value;
+    if (this.objectEnum.isMember(newSelected)) {
+      return this.set(state, newSelected);
+    }
+    throw new Error(
+      `Failed updating the selection of this selector. Expected one of ${this.objectEnum.members} but got ${newSelected}`,
+    );
+  };
+
+  render(state: Member): VNode<State> {
+    const options: VNode<State>[] = [];
+    for (const member in this.objectEnum.members) {
+      options.push(
+        h(
+          'option',
+          {
+            selected: member === state ? 'selected' : undefined,
+          },
+          text(member),
+        ),
+      );
+    }
+    return h('div', { class: 'field border no-round' }, [
+      h('select', { onchange: this.updateSelected }, options),
+      h('label', {}, text('Algorithm')),
+    ]);
+  }
 }
 
 class IntegerInputWithAlgorithmSelectionAndGoButton {
-  constructor() {
-
-  }
+  constructor() {}
 }

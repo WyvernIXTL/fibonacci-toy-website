@@ -38,8 +38,8 @@ export interface StateGetterSetter<State, SubState> {
 }
 
 export abstract class Component<State, SubState> {
-  private readonly set: Setter<State, SubState>;
-  private readonly get: Getter<State, SubState>;
+  protected readonly set: Setter<State, SubState>;
+  protected readonly get: Getter<State, SubState>;
 
   constructor(stateGetterSetter: StateGetterSetter<State, SubState>) {
     this.get = stateGetterSetter.getter;
@@ -62,4 +62,22 @@ export abstract class Component<State, SubState> {
   public view(state: State): VNode<State> {
     return this.render(this.get(state));
   }
+
+  /**
+   * Returns sub state of app state.
+   *
+   * @param state App state
+   * @returns Sub state of said app state.
+   */
+  public state(state: State): SubState {
+    return this.get(state);
+  }
+}
+
+/**
+ * Abstraction layer around const object being abused as enums.
+ */
+export interface ObjectEnum<Member> {
+  members: Member[];
+  isMember: (value: unknown) => value is Member;
 }
