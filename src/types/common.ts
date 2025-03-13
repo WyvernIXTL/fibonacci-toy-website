@@ -64,6 +64,11 @@ export abstract class Component<State, SubState> {
   }
 
   /**
+   * Returns a default state for the component.
+   */
+  abstract defaultState(): SubState;
+
+  /**
    * Returns sub state of app state.
    *
    * @param state App state

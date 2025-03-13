@@ -162,6 +162,13 @@ class QuadraticSelection<State, Member> extends Component<State, Member> {
       h('label', {}, text('Algorithm')),
     ]);
   }
+
+  defaultState(): Member {
+    if (this.objectEnum.members.length === 0) {
+      throw new Error('Empty selection. There is no default.');
+    }
+    return this.objectEnum.members[0];
+  }
 }
 
 type NaturalInputLeftState = number | undefined | 'INIT';
@@ -195,6 +202,10 @@ class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
       ],
     );
   }
+
+  defaultState(): NaturalInputLeftState {
+    return 'INIT';
+  }
 }
 
 class GoCancelButtonRight<State> extends Component<State, boolean> {
@@ -221,13 +232,88 @@ class GoCancelButtonRight<State> extends Component<State, boolean> {
       state ? text('Cancel') : text('Go'),
     );
   }
+
+  defaultState(): boolean {
+    return false;
+  }
 }
 
-class NumberInputWithSelectorGoAndCancelButton<
+export interface NumberInputWithSelectorGoAndCancelButtonState<Member> {
+  naturalInputState: NaturalInputLeftState;
+  quadraticSelectorState: Member;
+  goCancelButtonState: boolean;
+}
+export class NumberInputWithSelectorGoAndCancelButton<
   State,
-  SubState,
-> extends Component<State, SubState> {
-  constructor(getterSetter: StateGetterSetter<State, SubState>) {
+  Member,
+> extends Component<
+  State,
+  NumberInputWithSelectorGoAndCancelButtonState<Member>
+> {
+  private readonly naturalInput: NaturalInputLeft<State>;
+  private readonly quadraticSelector: QuadraticSelection<State, Member>;
+  private readonly goCancelButton: GoCancelButtonRight<State>;
+
+  constructor(
+    getterSetter: StateGetterSetter<
+      State,
+      NumberInputWithSelectorGoAndCancelButtonState<Member>
+    >,
+    selection: ObjectEnum<Member>,
+    onGoAction: Action<State, number>,
+    onCancelAction: Action<State, undefined>,
+  ) {
     super(getterSetter);
+    const naturalInputGetterSetter: StateGetterSetter<
+      State,
+      NaturalInputLeftState
+    > = {
+      getter: (state) => this.get(state).naturalInputState,
+      setter: (state, newInput) =>
+        this.set(state, { ...this.get(state), naturalInputState: newInput }),
+    };
+    this.naturalInput = new NaturalInputLeft(naturalInputGetterSetter);
+
+    const selectionGetterSetter: StateGetterSetter<State, Member> = {
+      getter: (state) => this.get(state).quadraticSelectorState,
+      setter: (state, newInput) =>
+        this.set(state, {
+          ...this.get(state),
+          quadraticSelectorState: newInput,
+        }),
+    };
+    this.quadraticSelector = new QuadraticSelection(
+      selectionGetterSetter,
+      selection,
+    );
+
+    const cancelInputGetterSetter: StateGetterSetter<State, boolean> = {
+      getter: (state) => this.get(state).goCancelButtonState,
+      setter: (state, newInput) =>
+        this.set(state, { ...this.get(state), goCancelButtonState: newInput }),
+    };
+    this.goCancelButton = new GoCancelButtonRight(
+      cancelInputGetterSetter,
+      (state, _event) => [onGoAction, this.get(state).naturalInputState],
+      (_state, _event) => [onCancelAction, undefined],
+    );
+  }
+
+  render(
+    state: NumberInputWithSelectorGoAndCancelButtonState<Member>,
+  ): VNode<State> {
+    return h('nav', { class: 'no-space' }, [
+      this.naturalInput.render(state.naturalInputState),
+      this.quadraticSelector.render(state.quadraticSelectorState),
+      this.goCancelButton.render(state.goCancelButtonState),
+    ]);
+  }
+
+  defaultState(): NumberInputWithSelectorGoAndCancelButtonState<Member> {
+    return {
+      naturalInputState: this.naturalInput.defaultState(),
+      quadraticSelectorState: this.quadraticSelector.defaultState(),
+      goCancelButtonState: this.goCancelButton.defaultState(),
+    };
   }
 }
