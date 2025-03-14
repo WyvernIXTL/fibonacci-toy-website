@@ -63,7 +63,7 @@ export class TextAreaWithCopy<State> extends Component<
     ]);
   }
 
-  defaultState(): TextAreaWithCopyState {
+  static defaultState(): TextAreaWithCopyState {
     return {
       value: '',
       valid: true,
@@ -96,7 +96,7 @@ function timeStringFromMs(ms: number): string {
   );
 }
 
-type FibonacciNumberOutputState = {
+export type FibonacciNumberOutputState = {
   target: TextAreaWithCopyState;
   durationInMs?: number;
   nthNumber?: number;
@@ -141,9 +141,9 @@ export class FibonacciNumberOutput<State> extends StateTransformer<
     );
   }
 
-  public defaultState(): FibonacciNumberOutputState {
+  static defaultState(): FibonacciNumberOutputState {
     return {
-      target: this.subComponent.defaultState(),
+      target: TextAreaWithCopy.defaultState(),
       durationInMs: undefined,
       nthNumber: undefined,
       error: undefined,

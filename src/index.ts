@@ -15,28 +15,20 @@ import {
   text,
 } from 'hyperapp';
 
+import { startWorker } from './calculation/worker-utils.ts';
 import type {
   FromWorkerMessage,
   ToWorkerMessage,
 } from './calculation/worker.ts';
-import {
-  type IntInputState,
-  IntegerInputWithAlgorithmSelectionAndGoButtonView,
-  defaultIntInputState,
-} from './components/input.ts';
-import { FibonacciOutput, type FibonacciOutputState } from './fib-output.ts';
-import { Footer } from './footer.ts';
-import { defaultProgressState } from './progress.ts';
+import type { NumberInputWithSelectorGoAndCancelButtonState } from './components/input.ts';
+import type { FibonacciNumberOutputState } from './components/output.ts';
+import type { FibonacciAlgorithm } from './types/FibonacciAlgorithm.ts';
 
 export type AppState = {
   calculating: boolean;
-  input: IntInputState;
-  output?: FibonacciOutputState;
+  input: NumberInputWithSelectorGoAndCancelButtonState<FibonacciAlgorithm>;
+  output: FibonacciNumberOutputState;
 };
-
-function startWorker(): Worker {
-  return new Worker(new URL('./worker', import.meta.url));
-}
 
 let worker: Worker = startWorker();
 
