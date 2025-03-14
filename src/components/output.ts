@@ -97,3 +97,12 @@ function timeStringFromMs(ms: number): string {
     (milliseconds ? `${milliseconds}ms` : '')
   );
 }
+
+type FibonacciNumberOutputState = {
+  value: string | undefined;
+  durationInMs: number;
+  waiting: boolean;
+  copied: boolean;
+}
+
+export class FibonacciNumberOutput<State> 

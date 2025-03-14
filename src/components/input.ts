@@ -4,7 +4,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { type Action, type VNode, h, text } from 'hyperapp';
+import {
+  type Action,
+  type Dispatch,
+  type Subscription,
+  type VNode,
+  h,
+  text,
+} from 'hyperapp';
 import {
   Component,
   type ObjectEnum,
@@ -62,13 +69,16 @@ class QuadraticSelection<State, Member> extends Component<State, Member> {
 type NaturalInputLeftState = number | undefined | 'INIT';
 class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
   readonly onUpdate: Action<State>;
+  readonly inputFieldId: string;
 
   constructor(
     getterSetter: StateGetterSetter<State, NaturalInputLeftState>,
     onUpdate: Action<State>,
+    inputFieldId: string,
   ) {
     super(getterSetter);
     this.onUpdate = onUpdate;
+    this.inputFieldId = inputFieldId;
   }
 
   readonly update: Action<State, Event> = (state, event) => {
@@ -92,7 +102,7 @@ class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
           type: 'number',
           oninput: this.update,
           value: valid ? state : '',
-          id: 'number-input',
+          id: this.inputFieldId,
         }),
         state !== undefined
           ? h('span', { class: 'helper' }, text('Which n-th fibonacci?'))
@@ -161,6 +171,9 @@ export class NumberInputWithSelectorGoAndCancelButton<
   private readonly naturalInput: NaturalInputLeft<State>;
   private readonly quadraticSelector: QuadraticSelection<State, Member>;
   private readonly goCancelButton: GoCancelButtonRight<State>;
+  private readonly inputFieldId: string;
+  private readonly onGoButtonWithInputNumber: Action<State, Event>;
+  private readonly onCancel: Action<State>;
 
   constructor(
     getterSetter: StateGetterSetter<
@@ -169,7 +182,7 @@ export class NumberInputWithSelectorGoAndCancelButton<
     >,
     selection: ObjectEnum<Member>,
     onGoAction: Action<State, number>,
-    onCancelAction: Action<State, undefined>,
+    onCancelAction: Action<State>,
   ) {
     super(getterSetter);
 
@@ -193,9 +206,11 @@ export class NumberInputWithSelectorGoAndCancelButton<
         },
       });
     };
+    this.inputFieldId = window.crypto.randomUUID();
     this.naturalInput = new NaturalInputLeft(
       naturalInputGetterSetter,
       disableGoButtonIfInputInvalid,
+      this.inputFieldId,
     );
 
     const selectionGetterSetter: StateGetterSetter<State, Member> = {
@@ -219,10 +234,15 @@ export class NumberInputWithSelectorGoAndCancelButton<
       setter: (state, newInput) =>
         this.set(state, { ...this.get(state), goCancelButtonState: newInput }),
     };
+    this.onGoButtonWithInputNumber = (state, _event) => [
+      onGoAction,
+      this.get(state).naturalInputState,
+    ];
+    this.onCancel = onCancelAction;
     this.goCancelButton = new GoCancelButtonRight(
       cancelInputGetterSetter,
-      (state, _event) => [onGoAction, this.get(state).naturalInputState],
-      (_state, _event) => [onCancelAction, undefined],
+      this.onGoButtonWithInputNumber,
+      (_state, _event) => onCancelAction,
     );
   }
 
@@ -241,6 +261,49 @@ export class NumberInputWithSelectorGoAndCancelButton<
       naturalInputState: this.naturalInput.defaultState(),
       quadraticSelectorState: this.quadraticSelector.defaultState(),
       goCancelButtonState: this.goCancelButton.defaultState(),
+    };
+  }
+
+  subscribers(): Subscription<State>[] {
+    return [
+      [
+        (dispatch: Dispatch<State>) => {
+          const handler = (ev: KeyboardEvent) => {
+            const focusedInput =
+              document.getElementById(this.inputFieldId) ?? true;
+            if (ev.key === 'Enter' && focusedInput) {
+              dispatch((state) =>
+                this.get(state).goCancelButtonState.disabled
+                  ? state
+                  : this.onGoButtonWithInputNumber,
+              );
+            }
+          };
+          addEventListener('keydown', handler);
+          return () => removeEventListener('keydown', handler);
+        },
+        undefined,
+      ],
+      [
+        (dispatch: Dispatch<State>) => {
+          const handler = (ev: KeyboardEvent) => {
+            if (ev.key === 'Escape') {
+              dispatch(this.onCancel);
+            }
+          };
+          addEventListener('keydown', handler);
+          return () => removeEventListener('keydown', handler);
+        },
+        undefined,
+      ],
+    ];
+  }
+
+  init() {
+    return () => {
+      requestAnimationFrame(() => {
+        document.getElementById(this.inputFieldId)?.focus();
+      });
     };
   }
 }
