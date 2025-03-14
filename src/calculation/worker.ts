@@ -5,11 +5,9 @@
  */
 
 // biome-ignore lint/correctness/useImportExtensions: <explanation>
-import { fibonacci_linear } from '../fibonacci-toy-rs-4-web/pkg';
-import {
-  FibonacciAlgorithm,
-  fibonacciLinear,
-} from './types/FibonacciAlgorithm.ts';
+import { fibonacci_linear } from '../../fibonacci-toy-rs-4-web/pkg/fibonacci_toy_rs_4_web';
+import { FibonacciAlgorithm } from '../types/FibonacciAlgorithm.ts';
+import { fibonacciLinear } from './fibonacci.ts';
 
 export type ToWorkerMessage = {
   n: number;
@@ -23,7 +21,8 @@ export type FromWorkerMessage = {
 
 self.onmessage = (event) => {
   const data = event.data as ToWorkerMessage;
-  const n = data.n;
+  const n = Math.max(Math.trunc(data.n), 0);
+
   const algorithm = data.algorithm;
 
   let result: string;

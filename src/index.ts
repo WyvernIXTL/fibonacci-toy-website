@@ -15,6 +15,10 @@ import {
   text,
 } from 'hyperapp';
 
+import type {
+  FromWorkerMessage,
+  ToWorkerMessage,
+} from './calculation/worker.ts';
 import {
   type IntInputState,
   IntegerInputWithAlgorithmSelectionAndGoButtonView,
@@ -23,7 +27,6 @@ import {
 import { FibonacciOutput, type FibonacciOutputState } from './fib-output.ts';
 import { Footer } from './footer.ts';
 import { defaultProgressState } from './progress.ts';
-import type { FromWorkerMessage, ToWorkerMessage } from './worker.ts';
 
 export type AppState = {
   calculating: boolean;
