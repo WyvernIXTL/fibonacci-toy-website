@@ -127,14 +127,35 @@ class GoCancelButtonRight<State> extends Component<
   private readonly onGoAction: Action<State, Event>;
   private readonly onCancelAction: Action<State, Event>;
 
+  private wrapEventActionAndSetCancel(
+    action: Action<State, Event>,
+    cancel: boolean,
+  ): Action<State, Event> {
+    return (state, event) => [
+      state,
+      [
+        (dispatch, event) => {
+          dispatch([action, event]);
+        },
+        event,
+      ],
+      (dispatch) => {
+        dispatch([this.setCancel, cancel]);
+      },
+    ];
+  }
+
   constructor(
     getterSetter: StateGetterSetter<State, GoCancelButtonRightState>,
     onGoAction: Action<State, Event>,
     onCancelAction: Action<State, Event>,
   ) {
     super(getterSetter);
-    this.onGoAction = onGoAction;
-    this.onCancelAction = onCancelAction;
+    this.onGoAction = this.wrapEventActionAndSetCancel(onGoAction, true);
+    this.onCancelAction = this.wrapEventActionAndSetCancel(
+      onCancelAction,
+      false,
+    );
   }
 
   render(state: GoCancelButtonRightState): VNode<State> {
@@ -235,7 +256,7 @@ export class NumberInputWithSelectorGoAndCancelButton<
       selection,
     );
 
-    const cancelInputGetterSetter: StateGetterSetter<
+    const goCancelButtonGetterSetter: StateGetterSetter<
       State,
       GoCancelButtonRightState
     > = {
@@ -252,7 +273,7 @@ export class NumberInputWithSelectorGoAndCancelButton<
     ];
     this.onCancel = onCancelAction;
     this.goCancelButton = new GoCancelButtonRight(
-      cancelInputGetterSetter,
+      goCancelButtonGetterSetter,
       this.onGoButtonWithInputNumber,
       (_state, _event) => onCancelAction,
     );
