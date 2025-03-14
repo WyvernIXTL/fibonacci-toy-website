@@ -73,7 +73,7 @@ export class TextAreaWithCopy<State> extends Component<
   }
 }
 
-function SpinnerCentered<State>(): VNode<State> {
+export function SpinnerCentered<State>(): VNode<State> {
   return h('div', { class: 'center-align' }, [
     h('div', { class: 'large-space' }),
     h('progress', { class: 'circle large' }),
@@ -100,7 +100,6 @@ type FibonacciNumberOutputState = {
   target: TextAreaWithCopyState;
   durationInMs?: number;
   nthNumber?: number;
-  display: boolean;
   error?: string;
 };
 
@@ -147,27 +146,7 @@ export class FibonacciNumberOutput<State> extends StateTransformer<
       target: this.subComponent.defaultState(),
       durationInMs: undefined,
       nthNumber: undefined,
-      display: false,
       error: undefined,
     };
   }
-
-  private readonly resetInner = (
-    state: FibonacciNumberOutputState,
-  ): FibonacciNumberOutputState => ({
-    ...state,
-    target: {
-      ...state.target,
-      footer: '',
-      valid: true,
-      copied: false,
-    },
-    durationInMs: undefined,
-    nthNumber: undefined,
-    error: undefined,
-  });
-
-  public readonly reset = (state: State): State => {
-    return this.set(state, this.resetInner(this.get(state)));
-  };
 }
