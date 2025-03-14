@@ -17,6 +17,14 @@ export type TextAreaWithCopyState = {
   valid: boolean;
   copied: boolean;
 };
+export function defaultTextAreaWithCopyState(): TextAreaWithCopyState {
+  return {
+    value: '',
+    valid: true,
+    footer: '',
+    copied: false,
+  };
+}
 
 export class TextAreaWithCopy<State> extends Component<
   State,
@@ -62,15 +70,6 @@ export class TextAreaWithCopy<State> extends Component<
         ),
     ]);
   }
-
-  static defaultState(): TextAreaWithCopyState {
-    return {
-      value: '',
-      valid: true,
-      footer: '',
-      copied: false,
-    };
-  }
 }
 
 export function SpinnerCentered<State>(): VNode<State> {
@@ -102,6 +101,14 @@ export type FibonacciNumberOutputState = {
   nthNumber?: number;
   error?: string;
 };
+export function defaultFibonacciNumberOutputState(): FibonacciNumberOutputState {
+  return {
+    target: defaultTextAreaWithCopyState(),
+    durationInMs: undefined,
+    nthNumber: undefined,
+    error: undefined,
+  };
+}
 
 export class FibonacciNumberOutput<State> extends StateTransformer<
   State,
@@ -139,14 +146,5 @@ export class FibonacciNumberOutput<State> extends StateTransformer<
         };
       },
     );
-  }
-
-  static defaultState(): FibonacciNumberOutputState {
-    return {
-      target: TextAreaWithCopy.defaultState(),
-      durationInMs: undefined,
-      nthNumber: undefined,
-      error: undefined,
-    };
   }
 }

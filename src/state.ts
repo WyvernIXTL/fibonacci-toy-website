@@ -8,9 +8,9 @@ import type { Action } from 'hyperapp';
 import type { FromWorkerMessage } from './calculation/worker.ts';
 import type { NumberInputWithSelectorGoAndCancelButtonState } from './components/input.ts';
 import {
-  FibonacciNumberOutput,
   type FibonacciNumberOutputState,
-  TextAreaWithCopy,
+  defaultFibonacciNumberOutputState,
+  defaultTextAreaWithCopyState,
 } from './components/output.ts';
 import type { FibonacciAlgorithm } from './types/FibonacciAlgorithm.ts';
 
@@ -26,15 +26,37 @@ const WriteValidResult: Action<AppState, FromWorkerMessage> = (
 ) => ({
   ...state,
   output: {
-    ...FibonacciNumberOutput.defaultState(),
+    ...defaultFibonacciNumberOutputState(),
     durationInMs: result.duration,
     nthNumber:
       state.input.naturalInputState === 'INIT'
         ? undefined
         : state.input.naturalInputState,
     target: {
-      ...TextAreaWithCopy.defaultState(),
+      ...defaultTextAreaWithCopyState(),
       value: result.result,
     },
   },
 });
+
+const WriteErrorResult: Action<AppState, string> = (state, errorMsg) => ({
+  ...state,
+  output: {
+    ...defaultFibonacciNumberOutputState(),
+    error: errorMsg,
+  },
+});
+
+const StartCalculation: Action<AppState> = (state) => ({
+  ...state,
+  calculating: true,
+  input: {
+    ...state.input,
+  },
+});
+
+const StartFibonacciCalculation: Action<AppState, number> = (state) => [
+  {
+    calculating: true,
+  },
+];
