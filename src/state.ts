@@ -5,58 +5,79 @@
  */
 
 import type { Action } from 'hyperapp';
-import type { FromWorkerMessage } from './calculation/worker.ts';
-import type { NumberInputWithSelectorGoAndCancelButtonState } from './components/input.ts';
+import { startWorker } from './calculation/worker-utils.ts';
+import type { FromWorkerMessage, ToWorkerMessage } from './calculation/worker.ts';
+import { NaturalInput, type NaturalInputState } from './components/input.ts';
 import {
+  FibonacciNumberOutput,
   type FibonacciNumberOutputState,
-  defaultFibonacciNumberOutputState,
-  defaultTextAreaWithCopyState,
 } from './components/output.ts';
 import type { FibonacciAlgorithm } from './types/FibonacciAlgorithm.ts';
 
 export type AppState = {
   calculating: boolean;
-  input: NumberInputWithSelectorGoAndCancelButtonState<FibonacciAlgorithm>;
+  input: NaturalInputState<FibonacciAlgorithm>;
   output: FibonacciNumberOutputState;
 };
 
-const WriteValidResult: Action<AppState, FromWorkerMessage> = (
-  state,
-  result,
-) => ({
+const worker = startWorker()
+
+const input = new NaturalInput<AppState, FibonacciAlgorithm>({
+  getter: (state) => state.input,
+  setter: (state, value) => {
+    state.input = value;
+  },
+  FibonacciAlgorithmList,
+
+});
+
+const WriteValidResult = (
+  state: AppState,
+  result: FromWorkerMessage,
+): AppState => ({
   ...state,
-  output: {
-    ...defaultFibonacciNumberOutputState(),
-    durationInMs: result.duration,
-    nthNumber:
-      state.input.naturalInputState === 'INIT'
-        ? undefined
-        : state.input.naturalInputState,
-    target: {
-      ...defaultTextAreaWithCopyState(),
+  output: FibonacciNumberOutput.writeValid(
+    FibonacciNumberOutput.defaultState(),
+    {
       value: result.result,
+      durationInMs: result.duration,
+      nthNumber:
+        state.input.naturalInputState === 'INIT'
+          ? undefined
+          : state.input.naturalInputState,
     },
-  },
+  ),
 });
 
-const WriteErrorResult: Action<AppState, string> = (state, errorMsg) => ({
+export const WriteErrorResult = (state: AppState, errorMsg: string): AppState => ({
   ...state,
-  output: {
-    ...defaultFibonacciNumberOutputState(),
-    error: errorMsg,
-  },
+  output: FibonacciNumberOutput.writeError(
+    FibonacciNumberOutput.defaultState(),
+    errorMsg,
+  ),
 });
 
-const StartCalculation: Action<AppState> = (state) => ({
+const StartCalculation = (state: AppState): AppState => ({
   ...state,
   calculating: true,
-  input: {
-    ...state.input,
-  },
 });
 
-const StartFibonacciCalculation: Action<AppState, number> = (state) => [
-  {
-    calculating: true,
+const StopCalculation = (state: AppState): AppState => ({
+  ...state,
+  calculating: false,
+});
+
+const StartFibonacciCalculation: Action<AppState, number> = (state, n) => [
+  StartCalculation(state),
+  (dispatch) => {
+    worker.onmessage = (event) => {
+      const { result, duration }: FromWorkerMessage = event.data;
+      dispatch([WriteValidResult, { number: result, duration: duration }]);
+    };
+    const message: ToWorkerMessage = {
+      n: n,
+      algorithm: ,
+    };
+    worker.postMessage(message);
   },
 ];

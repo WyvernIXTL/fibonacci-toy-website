@@ -20,15 +20,6 @@ import type {
   FromWorkerMessage,
   ToWorkerMessage,
 } from './calculation/worker.ts';
-import type { NumberInputWithSelectorGoAndCancelButtonState } from './components/input.ts';
-import type { FibonacciNumberOutputState } from './components/output.ts';
-import type { FibonacciAlgorithm } from './types/FibonacciAlgorithm.ts';
-
-export type AppState = {
-  calculating: boolean;
-  input: NumberInputWithSelectorGoAndCancelButtonState<FibonacciAlgorithm>;
-  output: FibonacciNumberOutputState;
-};
 
 let worker: Worker = startWorker();
 

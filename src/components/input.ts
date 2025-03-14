@@ -60,9 +60,6 @@ class QuadraticSelection<State, Member> extends Component<State, Member> {
 }
 
 type NaturalInputLeftState = number | undefined | 'INIT';
-function defaultNaturalInputLeftState(): NaturalInputLeftState {
-  return 'INIT';
-}
 
 class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
   readonly onUpdate: Action<State>;
@@ -107,18 +104,27 @@ class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
       ],
     );
   }
+
+  static defaultState(): NaturalInputLeftState {
+    return 'INIT';
+  }
+
+  static getNumber(state: NaturalInputLeftState): number | string {
+    if (state === 'INIT' || state === undefined) {
+      return 'Please input a number.';
+    }
+    return state;
+  }
+
+  getNumberState(state: State): number | string {
+    return NaturalInputLeft.getNumber(this.get(state));
+  }
 }
 
 type GoCancelButtonRightState = {
   cancel: boolean;
   disabled: boolean;
 };
-function defaultGoCancelButtonRightState(): GoCancelButtonRightState {
-  return {
-    cancel: false,
-    disabled: false,
-  };
-}
 
 class GoCancelButtonRight<State> extends Component<
   State,
@@ -127,35 +133,16 @@ class GoCancelButtonRight<State> extends Component<
   private readonly onGoAction: Action<State, Event>;
   private readonly onCancelAction: Action<State, Event>;
 
-  private wrapEventActionAndSetCancel(
-    action: Action<State, Event>,
-    cancel: boolean,
-  ): Action<State, Event> {
-    return (state, event) => [
-      state,
-      [
-        (dispatch, event) => {
-          dispatch([action, event]);
-        },
-        event,
-      ],
-      (dispatch) => {
-        dispatch([this.setCancel, cancel]);
-      },
-    ];
-  }
-
   constructor(
     getterSetter: StateGetterSetter<State, GoCancelButtonRightState>,
     onGoAction: Action<State, Event>,
     onCancelAction: Action<State, Event>,
   ) {
     super(getterSetter);
-    this.onGoAction = this.wrapEventActionAndSetCancel(onGoAction, true);
-    this.onCancelAction = this.wrapEventActionAndSetCancel(
-      onCancelAction,
-      false,
-    );
+    this.onGoAction = (state, event) =>
+      onGoAction(this.setCancelAction(state, true), event);
+    this.onCancelAction = (state, event) =>
+      onCancelAction(this.setCancelAction(state, false), event);
   }
 
   render(state: GoCancelButtonRightState): VNode<State> {
@@ -169,31 +156,40 @@ class GoCancelButtonRight<State> extends Component<
     );
   }
 
-  public readonly setCancel: Action<State, boolean> = (state, cancel) => {
-    return this.set(state, { ...this.get(state), cancel: cancel });
+  static defaultState(): GoCancelButtonRightState {
+    return {
+      cancel: false,
+      disabled: false,
+    };
+  }
+
+  static setCancel(
+    state: GoCancelButtonRightState,
+    cancel: boolean,
+  ): GoCancelButtonRightState {
+    return {
+      ...state,
+      cancel: cancel,
+    };
+  }
+
+  public readonly setCancelAction = (state: State, cancel: boolean): State => {
+    return this.set(
+      state,
+      GoCancelButtonRight.setCancel(this.get(state), cancel),
+    );
   };
 }
 
-export interface NumberInputWithSelectorGoAndCancelButtonState<Member> {
+export interface NaturalInputState<Member> {
   naturalInputState: NaturalInputLeftState;
   quadraticSelectorState: Member;
   goCancelButtonState: GoCancelButtonRightState;
 }
-export function defaultNumberInputWithSelectorGoAndCancelButtonState<Member>(
-  defaultSelected: Member,
-): NumberInputWithSelectorGoAndCancelButtonState<Member> {
-  return {
-    naturalInputState: defaultNaturalInputLeftState(),
-    quadraticSelectorState: defaultSelected,
-    goCancelButtonState: defaultGoCancelButtonRightState(),
-  };
-}
-export class NumberInputWithSelectorGoAndCancelButton<
+
+export class NaturalInput<State, Member> extends Component<
   State,
-  Member,
-> extends Component<
-  State,
-  NumberInputWithSelectorGoAndCancelButtonState<Member>
+  NaturalInputState<Member>
 > {
   private readonly naturalInput: NaturalInputLeft<State>;
   private readonly quadraticSelector: QuadraticSelection<State, Member>;
@@ -203,12 +199,9 @@ export class NumberInputWithSelectorGoAndCancelButton<
   private readonly onCancel: Action<State>;
 
   constructor(
-    getterSetter: StateGetterSetter<
-      State,
-      NumberInputWithSelectorGoAndCancelButtonState<Member>
-    >,
+    getterSetter: StateGetterSetter<State, NaturalInputState<Member>>,
     selection: ObjectEnum<Member>,
-    onGoAction: Action<State, number>,
+    onGoAction: Action<State, { n: number; algo: Member }>,
     onCancelAction: Action<State>,
   ) {
     super(getterSetter);
@@ -267,10 +260,13 @@ export class NumberInputWithSelectorGoAndCancelButton<
           goCancelButtonState: newInput,
         }),
     };
-    this.onGoButtonWithInputNumber = (state, _event) => [
-      onGoAction,
-      this.get(state).naturalInputState,
-    ];
+    this.onGoButtonWithInputNumber = (state, _event) => {
+      const input = this.naturalInput.getNumberState(state);
+      if (typeof input === 'string') {
+        throw new Error('String input given.');
+      }
+      return [onGoAction, { n: input }];
+    };
     this.onCancel = onCancelAction;
     this.goCancelButton = new GoCancelButtonRight(
       goCancelButtonGetterSetter,
@@ -279,14 +275,22 @@ export class NumberInputWithSelectorGoAndCancelButton<
     );
   }
 
-  render(
-    state: NumberInputWithSelectorGoAndCancelButtonState<Member>,
-  ): VNode<State> {
+  render(state: NaturalInputState<Member>): VNode<State> {
     return h('nav', { class: 'no-space' }, [
       this.naturalInput.render(state.naturalInputState),
       this.quadraticSelector.render(state.quadraticSelectorState),
       this.goCancelButton.render(state.goCancelButtonState),
     ]);
+  }
+
+  static defaultState<Member>(
+    defaultSelected: Member,
+  ): NaturalInputState<Member> {
+    return {
+      naturalInputState: NaturalInputLeft.defaultState(),
+      quadraticSelectorState: defaultSelected,
+      goCancelButtonState: GoCancelButtonRight.defaultState(),
+    };
   }
 
   subscribers(): Subscription<State>[] {
@@ -330,5 +334,9 @@ export class NumberInputWithSelectorGoAndCancelButton<
         document.getElementById(this.inputFieldId)?.focus();
       });
     };
+  }
+
+  resetCancel(state: State): State {
+    return this.goCancelButton.setCancelAction(state, false);
   }
 }
