@@ -5,12 +5,13 @@
  */
 
 // biome-ignore lint/correctness/useImportExtensions: <explanation>
-import { fibonacci_linear } from '../fibonacci-toy-rs-4-web/pkg';
-import { FibonacciAlgorithm, fibonacciLinear } from './algorithms.ts';
+import { fibonacci_linear } from '../../fibonacci-toy-rs-4-web/pkg/fibonacci_toy_rs_4_web';
+import { CalculationMode } from './calculation-mode.ts';
+import { fibonacciLinear } from './fibonacci-linear-js.ts';
 
 export type ToWorkerMessage = {
   n: number;
-  algorithm: FibonacciAlgorithm;
+  algorithm: CalculationMode;
 };
 
 export type FromWorkerMessage = {
@@ -20,16 +21,17 @@ export type FromWorkerMessage = {
 
 self.onmessage = (event) => {
   const data = event.data as ToWorkerMessage;
-  const n = data.n;
+  const n = Math.max(Math.trunc(data.n), 0);
+
   const algorithm = data.algorithm;
 
   let result: string;
   const startTime = performance.now();
   switch (algorithm) {
-    case FibonacciAlgorithm.Linear:
+    case CalculationMode.Linear:
       result = fibonacciLinear(n).toString(10);
       break;
-    case FibonacciAlgorithm.LinearRs:
+    case CalculationMode.LinearRs:
       result = fibonacci_linear(n);
       break;
     default:
