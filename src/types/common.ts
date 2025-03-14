@@ -37,11 +37,34 @@ export interface StateGetterSetter<State, SubState> {
   setter: Setter<State, SubState>;
 }
 
-export abstract class Component<State, SubState> {
-  protected readonly set: Setter<State, SubState>;
-  protected readonly get: Getter<State, SubState>;
+/**
+ * Component that is directly rendered from app state.
+ */
+export abstract class StatelessComponent<AppState> {
+  /**
+   * Render component with app state.
+   *
+   * @param state State of app.
+   * @returns Rendered component.
+   */
+  abstract view(state: AppState): VNode<AppState>;
+}
 
-  constructor(stateGetterSetter: StateGetterSetter<State, SubState>) {
+/**
+ * Component that has it's own state.
+ *
+ * The state is stored in app state and can be accessed via the app state
+ * and this components getter and setter.
+ */
+export abstract class Component<
+  AppState,
+  SubState,
+> extends StatelessComponent<AppState> {
+  protected readonly set: Setter<AppState, SubState>;
+  protected readonly get: Getter<AppState, SubState>;
+
+  constructor(stateGetterSetter: StateGetterSetter<AppState, SubState>) {
+    super();
     this.get = stateGetterSetter.getter;
     this.set = stateGetterSetter.setter;
   }
@@ -51,15 +74,9 @@ export abstract class Component<State, SubState> {
    *
    * @param state State of this component.
    */
-  abstract render(state: SubState): VNode<State>;
+  abstract render(state: SubState): VNode<AppState>;
 
-  /**
-   * Render component with app state.
-   *
-   * @param state State of app.
-   * @returns Rendered component.
-   */
-  public view(state: State): VNode<State> {
+  public view(state: AppState): VNode<AppState> {
     return this.render(this.get(state));
   }
 
@@ -74,8 +91,41 @@ export abstract class Component<State, SubState> {
    * @param state App state
    * @returns Sub state of said app state.
    */
-  public state(state: State): SubState {
+  public state(state: AppState): SubState {
     return this.get(state);
+  }
+}
+
+/**
+ * Component that holds one other component
+ * and acts as derivation function for its state to its sub components state.
+ */
+export abstract class StateTransformer<
+  AppState,
+  Source extends { target: Target },
+  Target,
+> extends Component<AppState, Source> {
+  public readonly subComponent: Component<AppState, Target>;
+  public readonly transform: (state: Source) => Source;
+
+  constructor(
+    getterSetter: StateGetterSetter<AppState, Source>,
+    subComponentConstructor: (
+      getterSetter: StateGetterSetter<AppState, Target>,
+    ) => Component<AppState, Target>,
+    transform: (state: Source) => Source,
+  ) {
+    super(getterSetter);
+    this.transform = transform;
+    const subComponentGetterSetter: StateGetterSetter<AppState, Target> = {
+      getter: (state) => this.transform(this.get(state)).target,
+      setter: (state) => this.set(state, this.transform(this.get(state))),
+    };
+    this.subComponent = subComponentConstructor(subComponentGetterSetter);
+  }
+
+  public render(state: Source): VNode<AppState> {
+    return this.subComponent.render(this.transform(state).target);
   }
 }
 

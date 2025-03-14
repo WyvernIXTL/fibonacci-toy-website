@@ -192,7 +192,10 @@ export class NumberInputWithSelectorGoAndCancelButton<
     > = {
       getter: (state) => this.get(state).naturalInputState,
       setter: (state, newInput) =>
-        this.set(state, { ...this.get(state), naturalInputState: newInput }),
+        this.set(state, {
+          ...this.get(state),
+          naturalInputState: newInput,
+        }),
     };
     const disableGoButtonIfInputInvalid: Action<State> = (state) => {
       if (this.get(state).goCancelButtonState.cancel) {
@@ -232,7 +235,10 @@ export class NumberInputWithSelectorGoAndCancelButton<
     > = {
       getter: (state) => this.get(state).goCancelButtonState,
       setter: (state, newInput) =>
-        this.set(state, { ...this.get(state), goCancelButtonState: newInput }),
+        this.set(state, {
+          ...this.get(state),
+          goCancelButtonState: newInput,
+        }),
     };
     this.onGoButtonWithInputNumber = (state, _event) => [
       onGoAction,

@@ -5,7 +5,11 @@
  */
 
 import { type Action, type VNode, h, text } from 'hyperapp';
-import { Component } from '../types/common.ts';
+import {
+  Component,
+  type StateGetterSetter,
+  StateTransformer,
+} from '../types/common.ts';
 
 export type TextAreaWithCopyState = {
   value: string;
@@ -69,17 +73,11 @@ export class TextAreaWithCopy<State> extends Component<
   }
 }
 
-export class SpinnerCentered<State> extends Component<State, undefined> {
-  render(_state: undefined): VNode<State> {
-    return h('div', { class: 'center-align' }, [
-      h('div', { class: 'large-space' }),
-      h('progress', { class: 'circle large' }),
-    ]);
-  }
-
-  defaultState(): undefined {
-    return undefined;
-  }
+function SpinnerCentered<State>(): VNode<State> {
+  return h('div', { class: 'center-align' }, [
+    h('div', { class: 'large-space' }),
+    h('progress', { class: 'circle large' }),
+  ]);
 }
 
 function timeStringFromMs(ms: number): string {
@@ -99,10 +97,77 @@ function timeStringFromMs(ms: number): string {
 }
 
 type FibonacciNumberOutputState = {
-  value: string | undefined;
-  durationInMs: number;
-  waiting: boolean;
-  copied: boolean;
-}
+  target: TextAreaWithCopyState;
+  durationInMs?: number;
+  nthNumber?: number;
+  display: boolean;
+  error?: string;
+};
 
-export class FibonacciNumberOutput<State> 
+export class FibonacciNumberOutput<State> extends StateTransformer<
+  State,
+  FibonacciNumberOutputState,
+  TextAreaWithCopyState
+> {
+  private footer(state: FibonacciNumberOutputState): string {
+    const nThNumberHelperPart = state.nthNumber
+      ? `${state.nthNumber}th number in fibonacci sequence`
+      : '';
+    const timeStringHelperPart = state.durationInMs
+      ? Math.round(state.durationInMs)
+        ? `calculated in ${timeStringFromMs(state.durationInMs)}`
+        : ''
+      : '';
+    return `${nThNumberHelperPart}${nThNumberHelperPart && timeStringHelperPart ? ', ' : ''}${timeStringHelperPart}`;
+  }
+
+  constructor(
+    getterSetter: StateGetterSetter<State, FibonacciNumberOutputState>,
+  ) {
+    super(
+      getterSetter,
+      (getterSetter) => {
+        return new TextAreaWithCopy(getterSetter);
+      },
+      (state) => {
+        return {
+          ...state,
+          target: {
+            ...state.target,
+            footer: this.footer(state),
+            valid: !state.error,
+          },
+        };
+      },
+    );
+  }
+
+  public defaultState(): FibonacciNumberOutputState {
+    return {
+      target: this.subComponent.defaultState(),
+      durationInMs: undefined,
+      nthNumber: undefined,
+      display: false,
+      error: undefined,
+    };
+  }
+
+  private readonly resetInner = (
+    state: FibonacciNumberOutputState,
+  ): FibonacciNumberOutputState => ({
+    ...state,
+    target: {
+      ...state.target,
+      footer: '',
+      valid: true,
+      copied: false,
+    },
+    durationInMs: undefined,
+    nthNumber: undefined,
+    error: undefined,
+  });
+
+  public readonly reset = (state: State): State => {
+    return this.set(state, this.resetInner(this.get(state)));
+  };
+}
