@@ -61,13 +61,23 @@ class QuadraticSelection<State, Member> extends Component<State, Member> {
 
 type NaturalInputLeftState = number | undefined | 'INIT';
 class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
+  readonly onUpdate: Action<State>;
+
+  constructor(
+    getterSetter: StateGetterSetter<State, NaturalInputLeftState>,
+    onUpdate: Action<State>,
+  ) {
+    super(getterSetter);
+    this.onUpdate = onUpdate;
+  }
+
   readonly update: Action<State, Event> = (state, event) => {
     const input = (event.target as HTMLInputElement).value;
     const reg = /_*\-*\.*,*\s*/g;
     const prunedInput = input.replace(reg, '');
     const valid = prunedInput !== '';
     const newState = valid ? Number.parseInt(prunedInput, 10) : undefined;
-    return this.set(state, newState);
+    return this.onUpdate(this.set(state, newState), undefined);
   };
 
   render(state: NaturalInputLeftState): VNode<State> {
@@ -96,12 +106,19 @@ class NaturalInputLeft<State> extends Component<State, NaturalInputLeftState> {
   }
 }
 
-class GoCancelButtonRight<State> extends Component<State, boolean> {
+type GoCancelButtonRightState = {
+  cancel: boolean;
+  disabled: boolean;
+};
+class GoCancelButtonRight<State> extends Component<
+  State,
+  GoCancelButtonRightState
+> {
   private readonly onGoAction: Action<State, Event>;
   private readonly onCancelAction: Action<State, Event>;
 
   constructor(
-    getterSetter: StateGetterSetter<State, boolean>,
+    getterSetter: StateGetterSetter<State, GoCancelButtonRightState>,
     onGoAction: Action<State, Event>,
     onCancelAction: Action<State, Event>,
   ) {
@@ -110,7 +127,7 @@ class GoCancelButtonRight<State> extends Component<State, boolean> {
     this.onCancelAction = onCancelAction;
   }
 
-  render(state: boolean): VNode<State> {
+  render(state: GoCancelButtonRightState): VNode<State> {
     return h(
       'button',
       {
@@ -121,15 +138,18 @@ class GoCancelButtonRight<State> extends Component<State, boolean> {
     );
   }
 
-  defaultState(): boolean {
-    return false;
+  defaultState(): GoCancelButtonRightState {
+    return {
+      cancel: false,
+      disabled: false,
+    };
   }
 }
 
 export interface NumberInputWithSelectorGoAndCancelButtonState<Member> {
   naturalInputState: NaturalInputLeftState;
   quadraticSelectorState: Member;
-  goCancelButtonState: boolean;
+  goCancelButtonState: GoCancelButtonRightState;
 }
 export class NumberInputWithSelectorGoAndCancelButton<
   State,
@@ -152,6 +172,7 @@ export class NumberInputWithSelectorGoAndCancelButton<
     onCancelAction: Action<State, undefined>,
   ) {
     super(getterSetter);
+
     const naturalInputGetterSetter: StateGetterSetter<
       State,
       NaturalInputLeftState
@@ -160,7 +181,22 @@ export class NumberInputWithSelectorGoAndCancelButton<
       setter: (state, newInput) =>
         this.set(state, { ...this.get(state), naturalInputState: newInput }),
     };
-    this.naturalInput = new NaturalInputLeft(naturalInputGetterSetter);
+    const disableGoButtonIfInputInvalid: Action<State> = (state) => {
+      if (this.get(state).goCancelButtonState.cancel) {
+        return state;
+      }
+      return this.set(state, {
+        ...this.get(state),
+        goCancelButtonState: {
+          cancel: false,
+          disabled: !this.get(state).naturalInputState,
+        },
+      });
+    };
+    this.naturalInput = new NaturalInputLeft(
+      naturalInputGetterSetter,
+      disableGoButtonIfInputInvalid,
+    );
 
     const selectionGetterSetter: StateGetterSetter<State, Member> = {
       getter: (state) => this.get(state).quadraticSelectorState,
@@ -175,7 +211,10 @@ export class NumberInputWithSelectorGoAndCancelButton<
       selection,
     );
 
-    const cancelInputGetterSetter: StateGetterSetter<State, boolean> = {
+    const cancelInputGetterSetter: StateGetterSetter<
+      State,
+      GoCancelButtonRightState
+    > = {
       getter: (state) => this.get(state).goCancelButtonState,
       setter: (state, newInput) =>
         this.set(state, { ...this.get(state), goCancelButtonState: newInput }),

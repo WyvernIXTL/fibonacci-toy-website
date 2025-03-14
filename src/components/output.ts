@@ -68,3 +68,32 @@ export class TextAreaWithCopy<State> extends Component<
     };
   }
 }
+
+export class SpinnerCentered<State> extends Component<State, undefined> {
+  render(_state: undefined): VNode<State> {
+    return h('div', { class: 'center-align' }, [
+      h('div', { class: 'large-space' }),
+      h('progress', { class: 'circle large' }),
+    ]);
+  }
+
+  defaultState(): undefined {
+    return undefined;
+  }
+}
+
+function timeStringFromMs(ms: number): string {
+  const msRounded = Math.round(ms);
+  const totalSeconds = Math.floor(msRounded / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const milliseconds = msRounded % 1000;
+
+  return (
+    (hours ? `${hours}h ` : '') +
+    (minutes ? `${minutes}min ` : '') +
+    (seconds ? `${seconds}s ` : '') +
+    (milliseconds ? `${milliseconds}ms` : '')
+  );
+}
