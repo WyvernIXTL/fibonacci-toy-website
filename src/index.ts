@@ -9,4 +9,13 @@ import 'material-dynamic-colors';
 import van from 'vanjs-core/debug';
 const { button, div, pre, h1, main } = van.tags;
 
-van.add(document.body, main({ class: 'responsive' }, h1('Hello World')));
+import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
+
+van.add(
+  document.body,
+  main(
+    { class: 'responsive' },
+    h1('Hello World'),
+    NaturalInputWithSelectorAndGoButton(),
+  ),
+);
