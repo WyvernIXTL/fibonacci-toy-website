@@ -5,7 +5,6 @@
  */
 
 import 'beercss';
-import 'material-dynamic-colors';
 import van from 'vanjs-core/debug';
 const { div, h1, main } = van.tags;
 
