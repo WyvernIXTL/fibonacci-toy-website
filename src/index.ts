@@ -16,6 +16,7 @@ import type {
   FromWorkerMessage,
   ToWorkerMessage,
 } from './calculation/worker.ts';
+import { Footer } from './components/footer.ts';
 import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
 import { FibonacciNumberOutput, Spinner } from './components/output.ts';
 
@@ -78,10 +79,12 @@ van.add(
   document.body,
   main(
     { class: 'responsive' },
-    h1('Hello World'),
+    div({ class: 'space' }),
+    h1({ class: 'small' }, 'Fibonacci Calculator'),
+    div({ class: 'space' }),
     NaturalInputWithSelectorAndGoButton({
       input: input,
-      labelInput: 'Which n-th fibonacci number?',
+      labelInput: 'Which n-th fibonacci?',
       buttonClicked: buttonClicked,
       selection: AlgorithmList,
       labelSelection: 'Algorithm',
@@ -92,4 +95,5 @@ van.add(
     spinnerElement,
     outputElement,
   ),
+  Footer(),
 );
