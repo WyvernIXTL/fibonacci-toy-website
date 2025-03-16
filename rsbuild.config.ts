@@ -20,7 +20,6 @@ export default defineConfig({
     lightningcssLoader: false,
   },
   output: {
-    assetPrefix: '/fibonacci-toy-website/',
     inlineScripts: true,
     inlineStyles: true,
   },
