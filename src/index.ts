@@ -62,7 +62,7 @@ van.derive(() => {
   }
 });
 
-van.derive(() => console.log(calculating.val));
+const spinnerElement = Spinner();
 
 van.add(
   document.body,
@@ -81,12 +81,12 @@ van.add(
     div({ class: 'medium-space' }),
     () =>
       calculating.val
-        ? Spinner()
+        ? spinnerElement
         : (result.val ?? '') &&
           FibonacciNumberOutput({
-            result: result.val ?? '',
-            n: n.val,
-            calculatedInMs: duration.val,
+            result: van.derive(() => result.val ?? ''),
+            n: n,
+            calculatedInMs: duration,
           }),
   ),
 );

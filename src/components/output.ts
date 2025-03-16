@@ -4,11 +4,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import van from 'vanjs-core/debug';
+import van, { type State } from 'vanjs-core/debug';
 const { button, div, span, i, textarea, progress } = van.tags;
 
-const TextAreaOutput = (props: { value: string; helper?: string }) => {
+const TextAreaOutput = (props: {
+  value: State<string>;
+  helper: State<string | undefined>;
+}) => {
   const copied = van.state(false);
+  van.derive(() => {
+    copied.val = false;
+  });
 
   return div(
     div(
@@ -20,7 +26,7 @@ const TextAreaOutput = (props: { value: string; helper?: string }) => {
           readOnly: true,
           style: 'word-break: break-all;',
         },
-        props.value,
+        props.value.val,
       ),
       span({ class: 'helper' }, props.helper),
     ),
@@ -30,7 +36,7 @@ const TextAreaOutput = (props: { value: string; helper?: string }) => {
         {
           class: 'circle slow-ripple',
           onclick: () => {
-            navigator.clipboard?.writeText(props.value);
+            navigator.clipboard?.writeText(props.value.val);
             copied.val = true;
           },
         },
@@ -57,15 +63,18 @@ function timeStringFromMs(ms: number): string {
 }
 
 export const FibonacciNumberOutput = (props: {
-  result: string;
-  n: number;
-  calculatedInMs: number;
+  result: State<string>;
+  n: State<number>;
+  calculatedInMs: State<number>;
 }) => {
-  let label = `${props.n}th number in fibonacci sequence`;
-  const roundedDuration = Math.round(props.calculatedInMs);
-  if (roundedDuration > 0) {
-    label += `, calculated in ${timeStringFromMs(roundedDuration)}`;
-  }
+  const label = van.derive(() => {
+    let label = `${props.n.val}th number in fibonacci sequence`;
+    const roundedDuration = Math.round(props.calculatedInMs.val);
+    if (roundedDuration > 0) {
+      label += `, calculated in ${timeStringFromMs(roundedDuration)}`;
+    }
+    return label;
+  });
 
   return TextAreaOutput({ value: props.result, helper: label });
 };
