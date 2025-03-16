@@ -6,8 +6,7 @@
 
 import type { State } from 'vanjs-core/debug';
 import van from 'vanjs-core/debug';
-const { button, div, pre, h1, main, input, span, select, label, option, nav } =
-  van.tags;
+const { button, div, input, span, select, label, option, nav } = van.tags;
 
 function naturalFromString(value: unknown): number | undefined {
   if (typeof value !== 'string') {
@@ -106,6 +105,7 @@ const GoButtonRight = (props: {
       onclick: () => {
         props.clicked.val = !props.clicked.val;
       },
+      style: 'width: 6em;',
     },
     () => (props.clicked.val ? 'Cancel' : 'Go'),
   );
