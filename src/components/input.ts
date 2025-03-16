@@ -4,8 +4,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import type { State } from 'vanjs-core/debug';
-import van from 'vanjs-core/debug';
+import type { State } from 'vanjs-core';
+import van from 'vanjs-core';
 const { button, div, input, span, select, label, option, nav } = van.tags;
 
 function naturalFromString(value: unknown): number | undefined {

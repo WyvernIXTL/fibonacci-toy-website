@@ -5,6 +5,7 @@ import { pluginCssMinimizer } from '@rsbuild/plugin-css-minimizer';
 export default defineConfig({
   html: {
     title: 'Fibonacci Toy Website',
+    inject: 'body',
   },
   plugins: [
     pluginCssMinimizer({
@@ -20,10 +21,7 @@ export default defineConfig({
   },
   output: {
     assetPrefix: '/fibonacci-toy-website/',
-  },
-  performance: {
-    chunkSplit: {
-      strategy: 'split-by-module',
-    },
+    inlineScripts: true,
+    inlineStyles: true,
   },
 });

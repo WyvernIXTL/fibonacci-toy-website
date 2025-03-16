@@ -5,10 +5,10 @@
  */
 
 import 'beercss';
-import van from 'vanjs-core/debug';
+import van from 'vanjs-core';
 const { div, h1, main } = van.tags;
 
-import type { State } from 'vanjs-core/debug';
+import type { State } from 'vanjs-core';
 import { Algorithm, AlgorithmList } from './calculation/calculation-mode.ts';
 import { startWorker } from './calculation/worker-util.ts';
 import type {

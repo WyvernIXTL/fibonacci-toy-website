@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import van, { type State } from 'vanjs-core/debug';
+import van, { type State } from 'vanjs-core';
 const { button, div, span, i, textarea, progress } = van.tags;
 
 const TextAreaOutput = (props: {

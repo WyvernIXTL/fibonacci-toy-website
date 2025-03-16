@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import van from 'vanjs-core/debug';
+import van from 'vanjs-core';
 const { span, nav, footer, a, i } = van.tags;
 
 export const Footer = () =>
