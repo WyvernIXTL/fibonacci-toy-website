@@ -71,11 +71,11 @@ const NaturalInputLeftRounded = (props: {
   );
 };
 
-const SelectorSquare = (props: {
-  selection: string[];
-  selected: State<string>;
+function SelectorSquare<Member extends string>(props: {
+  selection: Member[];
+  selected: State<Member>;
   label?: string;
-}) => {
+}): HTMLElement {
   return div(
     { class: 'field border no-round' },
     select(
@@ -90,7 +90,7 @@ const SelectorSquare = (props: {
     ),
     props.label && label(props.label),
   );
-};
+}
 
 const GoButtonRight = (props: {
   clicked: State<boolean>;
