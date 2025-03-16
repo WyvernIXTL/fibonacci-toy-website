@@ -13,6 +13,7 @@ const TextAreaOutput = (props: {
 }) => {
   const copied = van.state(false);
   van.derive(() => {
+    props.value.val;
     copied.val = false;
   });
 
@@ -26,7 +27,7 @@ const TextAreaOutput = (props: {
           readOnly: true,
           style: 'word-break: break-all;',
         },
-        props.value.val,
+        () => props.value.val,
       ),
       span({ class: 'helper' }, props.helper),
     ),

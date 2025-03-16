@@ -62,7 +62,17 @@ van.derive(() => {
   }
 });
 
+const resultString = van.derive(() => result.val ?? '');
+const outputElement = FibonacciNumberOutput({
+  result: resultString,
+  n: n,
+  calculatedInMs: duration,
+});
 const spinnerElement = Spinner();
+van.derive(() => {
+  spinnerElement.hidden = !calculating.val;
+  outputElement.hidden = calculating.val || !result.val;
+});
 
 van.add(
   document.body,
@@ -79,14 +89,7 @@ van.add(
       focusOnLoad: true,
     }),
     div({ class: 'medium-space' }),
-    () =>
-      calculating.val
-        ? spinnerElement
-        : (result.val ?? '') &&
-          FibonacciNumberOutput({
-            result: van.derive(() => result.val ?? ''),
-            n: n,
-            calculatedInMs: duration,
-          }),
+    spinnerElement,
+    outputElement,
   ),
 );
