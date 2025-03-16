@@ -23,8 +23,10 @@ van.add(
     h1('Hello World'),
     NaturalInputWithSelectorAndGoButton({
       input: input,
+      labelInput: 'Which n-th fibonacci number?',
       buttonClicked: buttonClicked,
       selection: algorithms,
+      labelSelection: 'Algorithm',
       selected: selected,
       focusOnLoad: true,
     }),

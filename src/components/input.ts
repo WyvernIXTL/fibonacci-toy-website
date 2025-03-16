@@ -28,6 +28,7 @@ function naturalFromString(value: unknown): number | undefined {
 
 const NaturalInputLeftRounded = (props: {
   input: State<number | undefined>;
+  label?: string;
   focusOnLoad?: boolean;
   eventListener?: (event: KeyboardEvent) => void;
 }) => {
@@ -59,7 +60,7 @@ const NaturalInputLeftRounded = (props: {
     inputField,
     () =>
       valid.val
-        ? span({ class: 'helper' }, 'Which n-th fibonacci?')
+        ? props.label && span({ class: 'helper' }, props.label)
         : span({ class: 'error' }, 'Not a natural number!'),
   );
 };
@@ -67,6 +68,7 @@ const NaturalInputLeftRounded = (props: {
 const SelectorSquare = (props: {
   selection: string[];
   selected: State<string>;
+  label?: string;
 }) => {
   return div(
     { class: 'field border no-round' },
@@ -80,7 +82,7 @@ const SelectorSquare = (props: {
         option({ selected: () => props.selected.val === member }, member),
       ),
     ),
-    label('Algorithm'),
+    props.label && label(props.label),
   );
 };
 
@@ -99,14 +101,16 @@ const GoButtonRight = (props: {
         props.clicked.val = !props.clicked.val;
       },
     },
-    () => (props.clicked.val ? 'Cancel' : '  Go  '),
+    () => (props.clicked.val ? 'Cancel' : 'Go'),
   );
 };
 
 export const NaturalInputWithSelectorAndGoButton = (props: {
   selection: string[];
+  labelSelection?: string;
   selected: State<string>;
   input: State<number | undefined>;
+  labelInput?: string;
   buttonClicked: State<boolean>;
   focusOnLoad?: boolean;
 }) => {
@@ -123,10 +127,15 @@ export const NaturalInputWithSelectorAndGoButton = (props: {
     { class: 'no-space' },
     NaturalInputLeftRounded({
       input: props.input,
+      label: props.labelInput,
       focusOnLoad: props.focusOnLoad,
       eventListener: enterKeyPressedEvent,
     }),
-    SelectorSquare({ selection: props.selection, selected: props.selected }),
+    SelectorSquare({
+      selection: props.selection,
+      selected: props.selected,
+      label: props.labelSelection,
+    }),
     GoButtonRight({
       clicked: props.buttonClicked,
       disabled: buttonDisabled,
