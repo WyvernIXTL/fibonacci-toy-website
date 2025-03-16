@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-use std::mem::replace;
+use std::mem::swap;
 
 use wasm_bindgen::prelude::*;
 
@@ -25,8 +25,8 @@ pub fn fibonacci_linear(n: u32) -> String {
     let mut b = Natural::from(1u32);
 
     for _ in 2..n {
-        let c = a + &b;
-        a = replace(&mut b, c)
+        a += &b;
+        swap(&mut a, &mut b);
     }
 
     return format!("{}", b);
