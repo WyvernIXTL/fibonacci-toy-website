@@ -29,12 +29,14 @@ function naturalFromString(value: unknown): number | undefined {
 const NaturalInputLeftRounded = (props: {
   input: State<number | undefined>;
   focusOnLoad?: boolean;
+  eventListener?: (event: KeyboardEvent) => void;
 }) => {
   const once = van.state(false);
   const valid = van.derive(() => !once.val || props.input.val !== undefined);
   const inputAsString = van.derive(() =>
     props.input.val ? props.input.val.toString() : '',
   );
+
   const inputField = input({
     type: 'number',
     value: inputAsString.val,
@@ -46,6 +48,10 @@ const NaturalInputLeftRounded = (props: {
   if (props.focusOnLoad) {
     requestAnimationFrame(() => inputField.focus());
   }
+  if (props.eventListener) {
+    inputField.addEventListener('keydown', props.eventListener);
+  }
+
   return div(
     {
       class: () => `field border left-round max ${valid.val ? '' : 'invalid'}`,
@@ -107,13 +113,23 @@ export const NaturalInputWithSelectorAndGoButton = (props: {
   const buttonDisabled = van.derive(
     () => props.input.val === undefined && !props.buttonClicked.val,
   );
+  const enterKeyPressedEvent = (event: KeyboardEvent) => {
+    if (event.code !== 'Enter' || props.input.val === undefined) {
+      return;
+    }
+    props.buttonClicked.val = true;
+  };
   return nav(
     { class: 'no-space' },
     NaturalInputLeftRounded({
       input: props.input,
       focusOnLoad: props.focusOnLoad,
+      eventListener: enterKeyPressedEvent,
     }),
     SelectorSquare({ selection: props.selection, selected: props.selected }),
-    GoButtonRight({ clicked: props.buttonClicked, disabled: buttonDisabled }),
+    GoButtonRight({
+      clicked: props.buttonClicked,
+      disabled: buttonDisabled,
+    }),
   );
 };
