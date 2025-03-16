@@ -10,6 +10,7 @@ import van from 'vanjs-core/debug';
 const { button, div, pre, h1, main } = van.tags;
 
 import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
+import { TextAreaOutput } from './components/output.ts';
 
 const input = van.state(undefined);
 const buttonClicked = van.state(false);
@@ -30,5 +31,12 @@ van.add(
       selected: selected,
       focusOnLoad: true,
     }),
+    div({ class: 'medium-space' }),
+    () =>
+      TextAreaOutput({
+        value:
+          '1232222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
+        helper: 'My output',
+      }),
   ),
 );
