@@ -11,11 +11,22 @@ const { button, div, pre, h1, main } = van.tags;
 
 import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
 
+const input = van.state(undefined);
+const buttonClicked = van.state(false);
+const algorithms = ['Linear Rs', 'Linear JS'];
+const selected = van.state('Linear Rs');
+
 van.add(
   document.body,
   main(
     { class: 'responsive' },
     h1('Hello World'),
-    NaturalInputWithSelectorAndGoButton(),
+    NaturalInputWithSelectorAndGoButton({
+      input: input,
+      buttonClicked: buttonClicked,
+      selection: algorithms,
+      selected: selected,
+      focusOnLoad: true,
+    }),
   ),
 );

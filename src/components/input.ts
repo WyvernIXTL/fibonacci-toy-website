@@ -28,24 +28,29 @@ function naturalFromString(value: unknown): number | undefined {
 
 const NaturalInputLeftRounded = (props: {
   input: State<number | undefined>;
+  focusOnLoad?: boolean;
 }) => {
   const once = van.state(false);
   const valid = van.derive(() => !once.val || props.input.val !== undefined);
   const inputAsString = van.derive(() =>
     props.input.val ? props.input.val.toString() : '',
   );
+  const inputField = input({
+    type: 'number',
+    value: inputAsString.val,
+    oninput: (e) => {
+      props.input.val = naturalFromString(e.target?.value);
+      once.val = true;
+    },
+  });
+  if (props.focusOnLoad) {
+    requestAnimationFrame(() => inputField.focus());
+  }
   return div(
     {
       class: () => `field border left-round max ${valid.val ? '' : 'invalid'}`,
     },
-    input({
-      type: 'number',
-      value: inputAsString.val,
-      oninput: (e) => {
-        props.input.val = naturalFromString(e.target?.value);
-        once.val = true;
-      },
-    }),
+    inputField,
     () =>
       valid.val
         ? span({ class: 'helper' }, 'Which n-th fibonacci?')
@@ -92,17 +97,23 @@ const GoButtonRight = (props: {
   );
 };
 
-export const NaturalInputWithSelectorAndGoButton = () => {
-  const input = van.state(undefined);
-  const selected = van.state('this');
-  const buttonClicked = van.state(false);
+export const NaturalInputWithSelectorAndGoButton = (props: {
+  selection: string[];
+  selected: State<string>;
+  input: State<number | undefined>;
+  buttonClicked: State<boolean>;
+  focusOnLoad?: boolean;
+}) => {
   const buttonDisabled = van.derive(
-    () => input.val === undefined && !buttonClicked.val,
+    () => props.input.val === undefined && !props.buttonClicked.val,
   );
   return nav(
     { class: 'no-space' },
-    NaturalInputLeftRounded({ input: input }),
-    SelectorSquare({ selection: ['that', 'this'], selected: selected }),
-    GoButtonRight({ clicked: buttonClicked, disabled: buttonDisabled }),
+    NaturalInputLeftRounded({
+      input: props.input,
+      focusOnLoad: props.focusOnLoad,
+    }),
+    SelectorSquare({ selection: props.selection, selected: props.selected }),
+    GoButtonRight({ clicked: props.buttonClicked, disabled: buttonDisabled }),
   );
 };
