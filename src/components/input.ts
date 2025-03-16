@@ -1,6 +1,7 @@
 import type { State } from 'vanjs-core';
 import van from 'vanjs-core/debug';
-const { button, div, pre, h1, main, input, span } = van.tags;
+const { button, div, pre, h1, main, input, span, select, label, option } =
+  van.tags;
 
 function naturalFromString(value: unknown): number | undefined {
   if (typeof value !== 'string') {
@@ -54,7 +55,31 @@ const NaturalInputLeftRounded = (props: {
   );
 };
 
+const SelectorSquare = (props: {
+  selection: string[];
+  selected: State<string>;
+}) => {
+  return div(
+    { class: 'field border no-round' },
+    select(
+      {
+        oninput: (e) => {
+          props.selected.val = e.target.val;
+        },
+      },
+      props.selection.map((member) =>
+        option({ selected: () => props.selected.val === member }, member),
+      ),
+    ),
+    label('Algorithm'),
+  );
+};
+
 export const NaturalInputWithSelectorAndGoButton = () => {
   const input = van.state(undefined);
-  return div(NaturalInputLeftRounded({ input: input }));
+  const selected = van.state('this');
+  return div(
+    NaturalInputLeftRounded({ input: input }),
+    SelectorSquare({ selection: ['that', 'this'], selected: selected }),
+  );
 };
