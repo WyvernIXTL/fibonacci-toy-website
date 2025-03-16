@@ -9,18 +9,60 @@ import 'material-dynamic-colors';
 import van from 'vanjs-core/debug';
 const { button, div, pre, h1, main } = van.tags;
 
+import type { State } from 'vanjs-core/debug';
 import { Algorithm, AlgorithmList } from './calculation/calculation-mode.ts';
+import { startWorker } from './calculation/worker-util.ts';
+import type {
+  FromWorkerMessage,
+  ToWorkerMessage,
+} from './calculation/worker.ts';
 import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
 import { FibonacciNumberOutput, Spinner } from './components/output.ts';
+
+let worker: Worker = startWorker();
 
 const input = van.state(undefined);
 const buttonClicked = van.state(false);
 const selected = van.state(Algorithm.LinearRs);
 
 const calculating = van.state(false);
-const result = van.state(undefined);
+const result: State<undefined | string> = van.state(undefined);
 const n = van.state(0);
 const duration = van.state(0);
+
+function attachSubscriberToWorker(worker: Worker) {
+  worker.onmessage = (event) => {
+    const workerResult: FromWorkerMessage = event.data;
+    result.val = workerResult.result;
+    duration.val = workerResult.duration;
+    calculating.val = false;
+    buttonClicked.val = false;
+  };
+}
+attachSubscriberToWorker(worker);
+
+van.derive(() => {
+  if (buttonClicked.val && input.val && !calculating.val) {
+    n.val = input.val;
+    calculating.val = true;
+    const workerMessage: ToWorkerMessage = {
+      n: n.val,
+      algorithm: selected.val,
+    };
+    worker.postMessage(workerMessage);
+  }
+});
+
+van.derive(() => {
+  if (!buttonClicked.val && calculating.val) {
+    worker.terminate();
+    worker = startWorker();
+    attachSubscriberToWorker(worker);
+    calculating.val = false;
+  }
+});
+
+van.derive(() => console.log(calculating.val));
 
 van.add(
   document.body,
@@ -40,9 +82,9 @@ van.add(
     () =>
       calculating.val
         ? Spinner()
-        : result.val &&
+        : (result.val ?? '') &&
           FibonacciNumberOutput({
-            result: result.val,
+            result: result.val ?? '',
             n: n.val,
             calculatedInMs: duration.val,
           }),
