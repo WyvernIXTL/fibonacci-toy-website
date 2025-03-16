@@ -1,6 +1,6 @@
 import type { State } from 'vanjs-core';
 import van from 'vanjs-core/debug';
-const { button, div, pre, h1, main, input, span, select, label, option } =
+const { button, div, pre, h1, main, input, span, select, label, option, nav } =
   van.tags;
 
 function naturalFromString(value: unknown): number | undefined {
@@ -46,12 +46,10 @@ const NaturalInputLeftRounded = (props: {
         once.val = true;
       },
     }),
-    span(
-      {
-        class: () => (valid.val ? 'helper' : 'error'),
-      },
-      () => (valid.val ? 'Which n-th fibonacci?' : 'Not a natural number!'),
-    ),
+    () =>
+      valid.val
+        ? span({ class: 'helper' }, 'Which n-th fibonacci?')
+        : span({ class: 'error' }, 'Not a natural number!'),
   );
 };
 
@@ -75,11 +73,33 @@ const SelectorSquare = (props: {
   );
 };
 
+type ButtonMode = 'Go' | 'Cancel';
+
+const GoButtonRight = (props: {
+  mode: State<ButtonMode>;
+  disabled: State<boolean>;
+}) => {
+  const buttonModeStyle = van.derive(() =>
+    props.mode.val === 'Go' ? 'fill' : 'error-text',
+  );
+  return button(
+    {
+      class: () => `border right-round large ${buttonModeStyle.val}`,
+      disabled: () => props.disabled.val,
+    },
+    () => (props.mode.val === 'Go' ? '  Go  ' : 'Cancel'),
+  );
+};
+
 export const NaturalInputWithSelectorAndGoButton = () => {
   const input = van.state(undefined);
   const selected = van.state('this');
-  return div(
+  const buttonMode = van.state('Go' as ButtonMode);
+  const buttonDisabled = van.state(false);
+  return nav(
+    { class: 'no-space' },
     NaturalInputLeftRounded({ input: input }),
     SelectorSquare({ selection: ['that', 'this'], selected: selected }),
+    GoButtonRight({ mode: buttonMode, disabled: buttonDisabled }),
   );
 };
