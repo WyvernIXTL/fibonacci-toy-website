@@ -1,56 +1,60 @@
+import type { State } from 'vanjs-core';
 import van from 'vanjs-core/debug';
 const { button, div, pre, h1, main, input, span } = van.tags;
 
-function naturalFromString(value: string): number | undefined {
-  const reg = /_*\-*\.*,*\s*/g;
-  const prunedValue = value.replace(reg, '');
-  if (prunedValue !== '') {
-    const parsedNumber = Number.parseInt(prunedValue, 10);
-    if (parsedNumber >= 0) {
-      return parsedNumber;
-    }
+function naturalFromString(value: unknown): number | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
   }
-  return undefined;
+
+  const isMinusReg = /^\-\d*/g;
+  if (value.match(isMinusReg)) {
+    return undefined;
+  }
+
+  const reg = /_*\.*,*\s*/g;
+  const prunedValue = value.replace(reg, '');
+  if (prunedValue === '') {
+    return undefined;
+  }
+
+  const parsedNumber = Number.parseInt(prunedValue, 10);
+  if (parsedNumber < 0) {
+    return undefined;
+  }
+  return parsedNumber;
 }
 
-const NaturalInputLeftRounded = () => {
+const NaturalInputLeftRounded = (props: {
+  input: State<number | undefined>;
+}) => {
   const once = van.state(false);
-  const userInput = van.state('');
-  const naturalConvertedInput = van.derive(() =>
-    naturalFromString(userInput.val),
+  const valid = van.derive(() => !once.val || props.input.val !== undefined);
+  const inputAsString = van.derive(() =>
+    props.input.val ? props.input.val.toString() : '',
   );
-  const valid = van.derive(
-    () => !once.val || naturalConvertedInput.val !== undefined,
-  );
-  return {
-    view: div(
-      {
-        class: () =>
-          `field border left-round max ${valid.val ? '' : 'invalid'}`,
+  return div(
+    {
+      class: () => `field border left-round max ${valid.val ? '' : 'invalid'}`,
+    },
+    input({
+      type: 'number',
+      value: inputAsString.val,
+      oninput: (e) => {
+        props.input.val = naturalFromString(e.target?.value);
+        once.val = true;
       },
-      input({
-        type: 'number',
-        value: userInput,
-        oninput: (e) => {
-          userInput.val = e.target?.value;
-          once.val = true;
-        },
-      }),
-      span(
-        {
-          class: () => (valid.val ? 'helper' : 'error'),
-        },
-        () => (valid.val ? 'Which n-th fibonacci?' : 'Not a natural number!'),
-      ),
+    }),
+    span(
+      {
+        class: () => (valid.val ? 'helper' : 'error'),
+      },
+      () => (valid.val ? 'Which n-th fibonacci?' : 'Not a natural number!'),
     ),
-    state: { input: naturalConvertedInput },
-  };
+  );
 };
 
 export const NaturalInputWithSelectorAndGoButton = () => {
-  const {
-    view: naturalDom,
-    state: { input },
-  } = NaturalInputLeftRounded();
-  return div(naturalDom);
+  const input = van.state(undefined);
+  return div(NaturalInputLeftRounded({ input: input }));
 };
