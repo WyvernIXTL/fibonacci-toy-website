@@ -118,10 +118,16 @@ export const NaturalInputWithSelectorAndGoButton = (props: {
     () => props.input.val === undefined && !props.buttonClicked.val,
   );
   const enterKeyPressedEvent = (event: KeyboardEvent) => {
-    if (event.code !== 'Enter' || props.input.val === undefined) {
-      return;
+    if (
+      event.code === 'Enter' &&
+      props.input.val !== undefined &&
+      !props.buttonClicked.val
+    ) {
+      props.buttonClicked.val = true;
     }
-    props.buttonClicked.val = true;
+    if (event.code === 'Escape' && props.buttonClicked.val) {
+      props.buttonClicked.val = false;
+    }
   };
   return nav(
     { class: 'no-space' },
