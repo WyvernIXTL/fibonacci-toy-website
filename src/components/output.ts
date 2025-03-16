@@ -12,12 +12,17 @@ const TextAreaOutput = (props: { value: string; helper?: string }) => {
 
   return div(
     div(
-      { class: 'field textarea round border extra' },
+      {
+        class: 'field textarea round border extra',
+      },
       textarea(
-        { readOnly: true, style: 'word-break: break-all;' },
+        {
+          readOnly: true,
+          style: 'word-break: break-all;',
+        },
         props.value,
       ),
-      props.helper && span({ class: 'helper' }, props.helper),
+      span({ class: 'helper' }, props.helper),
     ),
     div(
       { class: 'right-align' },
