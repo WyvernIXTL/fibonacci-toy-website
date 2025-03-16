@@ -73,33 +73,36 @@ const SelectorSquare = (props: {
   );
 };
 
-type ButtonMode = 'Go' | 'Cancel';
-
 const GoButtonRight = (props: {
-  mode: State<ButtonMode>;
+  clicked: State<boolean>;
   disabled: State<boolean>;
 }) => {
   const buttonModeStyle = van.derive(() =>
-    props.mode.val === 'Go' ? 'fill' : 'error-text',
+    props.clicked.val ? 'error-text' : 'fill',
   );
   return button(
     {
       class: () => `border right-round large ${buttonModeStyle.val}`,
       disabled: () => props.disabled.val,
+      onclick: () => {
+        props.clicked.val = !props.clicked.val;
+      },
     },
-    () => (props.mode.val === 'Go' ? '  Go  ' : 'Cancel'),
+    () => (props.clicked.val ? 'Cancel' : '  Go  '),
   );
 };
 
 export const NaturalInputWithSelectorAndGoButton = () => {
   const input = van.state(undefined);
   const selected = van.state('this');
-  const buttonMode = van.state('Go' as ButtonMode);
-  const buttonDisabled = van.state(false);
+  const buttonClicked = van.state(false);
+  const buttonDisabled = van.derive(
+    () => input.val === undefined && !buttonClicked.val,
+  );
   return nav(
     { class: 'no-space' },
     NaturalInputLeftRounded({ input: input }),
     SelectorSquare({ selection: ['that', 'this'], selected: selected }),
-    GoButtonRight({ mode: buttonMode, disabled: buttonDisabled }),
+    GoButtonRight({ clicked: buttonClicked, disabled: buttonDisabled }),
   );
 };
