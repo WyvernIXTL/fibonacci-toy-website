@@ -81,7 +81,7 @@ const SelectorSquare = (props: {
     select(
       {
         oninput: (e) => {
-          props.selected.val = e.target.val;
+          props.selected.val = e.target.value;
         },
       },
       props.selection.map((member) =>
@@ -111,15 +111,17 @@ const GoButtonRight = (props: {
   );
 };
 
-export const NaturalInputWithSelectorAndGoButton = (props: {
-  selection: string[];
+export function NaturalInputWithSelectorAndGoButton<
+  Member extends string,
+>(props: {
+  selection: Member[];
   labelSelection?: string;
-  selected: State<string>;
+  selected: State<Member>;
   input: State<number | undefined>;
   labelInput?: string;
   buttonClicked: State<boolean>;
   focusOnLoad?: boolean;
-}) => {
+}): HTMLElement {
   const buttonDisabled = van.derive(
     () => props.input.val === undefined && !props.buttonClicked.val,
   );
@@ -153,4 +155,4 @@ export const NaturalInputWithSelectorAndGoButton = (props: {
       disabled: buttonDisabled,
     }),
   );
-};
+}

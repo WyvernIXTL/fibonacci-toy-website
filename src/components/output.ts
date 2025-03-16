@@ -5,7 +5,7 @@
  */
 
 import van from 'vanjs-core/debug';
-const { button, div, span, i, textarea } = van.tags;
+const { button, div, span, i, textarea, progress } = van.tags;
 
 const TextAreaOutput = (props: { value: string; helper?: string }) => {
   const copied = van.state(false);
@@ -64,3 +64,10 @@ export const FibonacciNumberOutput = (props: {
 
   return TextAreaOutput({ value: props.result, helper: label });
 };
+
+export const Spinner = () =>
+  div(
+    { class: 'center-align' },
+    div({ class: 'large-space' }),
+    progress({ class: 'large circle' }),
+  );

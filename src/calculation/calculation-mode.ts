@@ -4,18 +4,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-export const CalculationMode = {
+export const Algorithm = {
   // biome-ignore lint/style/useNamingConvention: This is a constant object.
   Linear: 'Linear Javascript',
   // biome-ignore lint/style/useNamingConvention: This is a constant object.
   LinearRs: 'Linear Rust',
 } as const;
 
-export type CalculationMode =
-  (typeof CalculationMode)[keyof typeof CalculationMode];
+export type Algorithm = (typeof Algorithm)[keyof typeof Algorithm];
 
-export const CalculationModeList = Object.values(CalculationMode);
+export const AlgorithmList = Object.values(Algorithm);
 
-export function isCalculationMode(value: unknown): value is CalculationMode {
-  return CalculationModeList.includes(value as CalculationMode);
+export function isAlgorithm(value: unknown): value is Algorithm {
+  return AlgorithmList.includes(value as Algorithm);
 }

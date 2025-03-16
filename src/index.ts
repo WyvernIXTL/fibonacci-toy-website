@@ -9,13 +9,18 @@ import 'material-dynamic-colors';
 import van from 'vanjs-core/debug';
 const { button, div, pre, h1, main } = van.tags;
 
+import { Algorithm, AlgorithmList } from './calculation/calculation-mode.ts';
 import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
-import { FibonacciNumberOutput } from './components/output.ts';
+import { FibonacciNumberOutput, Spinner } from './components/output.ts';
 
 const input = van.state(undefined);
 const buttonClicked = van.state(false);
-const algorithms = ['Linear Rs', 'Linear JS'];
-const selected = van.state('Linear Rs');
+const selected = van.state(Algorithm.LinearRs);
+
+const calculating = van.state(false);
+const result = van.state(undefined);
+const n = van.state(0);
+const duration = van.state(0);
 
 van.add(
   document.body,
@@ -26,18 +31,20 @@ van.add(
       input: input,
       labelInput: 'Which n-th fibonacci number?',
       buttonClicked: buttonClicked,
-      selection: algorithms,
+      selection: AlgorithmList,
       labelSelection: 'Algorithm',
       selected: selected,
       focusOnLoad: true,
     }),
     div({ class: 'medium-space' }),
     () =>
-      FibonacciNumberOutput({
-        result:
-          '1232222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-        n: 1223,
-        calculatedInMs: 12345,
-      }),
+      calculating.val
+        ? Spinner()
+        : result.val &&
+          FibonacciNumberOutput({
+            result: result.val,
+            n: n.val,
+            calculatedInMs: duration.val,
+          }),
   ),
 );
