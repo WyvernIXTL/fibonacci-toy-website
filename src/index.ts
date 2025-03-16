@@ -7,7 +7,7 @@
 import 'beercss';
 import 'material-dynamic-colors';
 import van from 'vanjs-core/debug';
-const { button, div, pre, h1, main } = van.tags;
+const { div, h1, main } = van.tags;
 
 import type { State } from 'vanjs-core/debug';
 import { Algorithm, AlgorithmList } from './calculation/calculation-mode.ts';
