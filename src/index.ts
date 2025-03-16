@@ -10,7 +10,7 @@ import van from 'vanjs-core/debug';
 const { button, div, pre, h1, main } = van.tags;
 
 import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
-import { TextAreaOutput } from './components/output.ts';
+import { FibonacciNumberOutput } from './components/output.ts';
 
 const input = van.state(undefined);
 const buttonClicked = van.state(false);
@@ -33,10 +33,11 @@ van.add(
     }),
     div({ class: 'medium-space' }),
     () =>
-      TextAreaOutput({
-        value:
+      FibonacciNumberOutput({
+        result:
           '1232222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-        helper: 'My output',
+        n: 1223,
+        calculatedInMs: 12345,
       }),
   ),
 );

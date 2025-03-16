@@ -7,7 +7,7 @@
 import van from 'vanjs-core/debug';
 const { button, div, span, i, textarea } = van.tags;
 
-export const TextAreaOutput = (props: { value: string; helper?: string }) => {
+const TextAreaOutput = (props: { value: string; helper?: string }) => {
   const copied = van.state(false);
 
   return div(
@@ -33,4 +33,34 @@ export const TextAreaOutput = (props: { value: string; helper?: string }) => {
       ),
     ),
   );
+};
+
+function timeStringFromMs(ms: number): string {
+  const msRounded = Math.round(ms);
+  const totalSeconds = Math.floor(msRounded / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const milliseconds = msRounded % 1000;
+
+  return (
+    (hours ? `${hours}h ` : '') +
+    (minutes ? `${minutes}min ` : '') +
+    (seconds ? `${seconds}s ` : '') +
+    (milliseconds ? `${milliseconds}ms` : '')
+  );
+}
+
+export const FibonacciNumberOutput = (props: {
+  result: string;
+  n: number;
+  calculatedInMs: number;
+}) => {
+  let label = `${props.n}th number in fibonacci sequence`;
+  const roundedDuration = Math.round(props.calculatedInMs);
+  if (roundedDuration > 0) {
+    label += `, calculated in ${timeStringFromMs(roundedDuration)}`;
+  }
+
+  return TextAreaOutput({ value: props.result, helper: label });
 };
