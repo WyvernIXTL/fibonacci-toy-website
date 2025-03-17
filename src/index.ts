@@ -26,11 +26,12 @@ const buttonClicked = van.state(false);
 const selected = van.state(Algorithm.LinearRs);
 
 const calculating = van.state(false);
+
 const result: State<undefined | string> = van.state(undefined);
 const n = van.state(0);
 const duration = van.state(0);
 
-function attachSubscriberToWorker(worker: Worker) {
+function onFinishedCalculation(worker: Worker) {
   worker.onmessage = (event) => {
     const workerResult: FromWorkerMessage = event.data;
     result.val = workerResult.result;
@@ -39,10 +40,10 @@ function attachSubscriberToWorker(worker: Worker) {
     buttonClicked.val = false;
   };
 }
-attachSubscriberToWorker(worker);
+onFinishedCalculation(worker);
 
-van.derive(() => {
-  if (buttonClicked.val && input.val && !calculating.val) {
+function startCalculation(): void {
+  if (input.val && !calculating.val) {
     n.val = input.val;
     calculating.val = true;
     const workerMessage: ToWorkerMessage = {
@@ -51,20 +52,19 @@ van.derive(() => {
     };
     worker.postMessage(workerMessage);
   }
-});
+}
 
-van.derive(() => {
-  if (!buttonClicked.val && calculating.val) {
+function cancelCalculation(): void {
+  if (calculating.val) {
     worker.terminate();
     worker = startWorker();
-    attachSubscriberToWorker(worker);
+    onFinishedCalculation(worker);
     calculating.val = false;
   }
-});
+}
 
-const resultString = van.derive(() => result.val ?? '');
 const outputElement = FibonacciNumberOutput({
-  result: resultString,
+  result: van.derive(() => result.val ?? ''),
   n: n,
   calculatedInMs: duration,
 });
@@ -89,6 +89,8 @@ van.add(
       labelSelection: 'Algorithm',
       selected: selected,
       focusOnLoad: true,
+      onGo: startCalculation,
+      onCancel: cancelCalculation,
     }),
     div({ class: 'medium-space' }),
     spinnerElement,

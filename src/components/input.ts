@@ -94,6 +94,8 @@ function SelectorSquare<Member extends string>(props: {
 const GoButtonRight = (props: {
   clicked: State<boolean>;
   disabled: State<boolean>;
+  onGo: () => void;
+  onCancel: () => void;
 }) => {
   const buttonModeStyle = van.derive(() =>
     props.clicked.val ? 'error-text' : 'fill',
@@ -104,6 +106,11 @@ const GoButtonRight = (props: {
       disabled: () => props.disabled.val,
       onclick: () => {
         props.clicked.val = !props.clicked.val;
+        if (props.clicked.val) {
+          props.onGo();
+        } else {
+          props.onCancel();
+        }
       },
       style: 'width: 6em;',
     },
@@ -121,20 +128,24 @@ export function NaturalInputWithSelectorAndGoButton<
   labelInput?: string;
   buttonClicked: State<boolean>;
   focusOnLoad?: boolean;
+  onGo: () => void;
+  onCancel: () => void;
 }): HTMLElement {
   const buttonDisabled = van.derive(
     () => props.input.val === undefined && !props.buttonClicked.val,
   );
-  const enterKeyPressedEvent = (event: KeyboardEvent) => {
+  const onEnterKeyPressed = (event: KeyboardEvent) => {
     if (
       event.code === 'Enter' &&
       props.input.val !== undefined &&
       !props.buttonClicked.val
     ) {
       props.buttonClicked.val = true;
+      props.onGo();
     }
     if (event.code === 'Escape' && props.buttonClicked.val) {
       props.buttonClicked.val = false;
+      props.onCancel();
     }
   };
   return nav(
@@ -143,7 +154,7 @@ export function NaturalInputWithSelectorAndGoButton<
       input: props.input,
       label: props.labelInput,
       focusOnLoad: props.focusOnLoad,
-      eventListener: enterKeyPressedEvent,
+      eventListener: onEnterKeyPressed,
     }),
     SelectorSquare({
       selection: props.selection,
@@ -153,6 +164,8 @@ export function NaturalInputWithSelectorAndGoButton<
     GoButtonRight({
       clicked: props.buttonClicked,
       disabled: buttonDisabled,
+      onGo: props.onGo,
+      onCancel: props.onCancel,
     }),
   );
 }
