@@ -60,8 +60,8 @@ const NaturalInputLeftRounded = (props: {
     inputField,
     () =>
       valid.val
-        ? props.label && span({ class: 'helper' }, props.label)
-        : span({ class: 'error' }, 'Not a natural number!'),
+        ? props.label && label({ class: 'helper' }, props.label)
+        : label({ class: 'error' }, 'Not a natural number!'),
   );
 };
 
