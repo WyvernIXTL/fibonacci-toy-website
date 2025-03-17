@@ -87,7 +87,7 @@ function SelectorSquare<Member extends string>(props: {
         option({ selected: () => props.selected.val === member }, member),
       ),
     ),
-    props.label && label(props.label),
+    props.label && label({ class: 'helper' }, props.label),
   );
 }
 
