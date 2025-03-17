@@ -18,16 +18,15 @@ function naturalFromString(value: unknown): number | undefined {
     return undefined;
   }
 
-  const reg = /_*\.*,*\s*/g;
-  const prunedValue = value.replace(reg, '');
-  if (prunedValue === '') {
+  const parsedNumber = Number.parseInt(value, 10);
+  if (
+    parsedNumber < 0 ||
+    Number.isNaN(parsedNumber) ||
+    parsedNumber.toString() !== value
+  ) {
     return undefined;
   }
 
-  const parsedNumber = Number.parseInt(prunedValue, 10);
-  if (parsedNumber < 0) {
-    return undefined;
-  }
   return parsedNumber;
 }
 
@@ -39,13 +38,9 @@ const NaturalInputLeftRounded = (props: {
 }) => {
   const once = van.state(false);
   const valid = van.derive(() => !once.val || props.input.val !== undefined);
-  const inputAsString = van.derive(() =>
-    props.input.val ? props.input.val.toString() : '',
-  );
 
   const inputField = input({
     type: 'number',
-    value: inputAsString.val,
     oninput: (e) => {
       props.input.val = naturalFromString(e.target?.value);
       once.val = true;
