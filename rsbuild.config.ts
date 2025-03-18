@@ -4,6 +4,7 @@ import { pluginCssMinimizer } from '@rsbuild/plugin-css-minimizer';
 // biome-ignore lint/style/noDefaultExport: <explanation>
 export default defineConfig({
   html: {
+    template: './src/index.html',
     title: 'Fibonacci Toy Website',
     inject: 'body',
   },
