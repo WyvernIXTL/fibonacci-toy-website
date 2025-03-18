@@ -7,6 +7,9 @@ export default defineConfig({
     template: './src/index.html',
     title: 'Fibonacci Toy Website',
     inject: 'body',
+    meta: {
+      description: 'Calculate fibonacci numbers, fast, on the web!',
+    },
   },
   plugins: [
     pluginCssMinimizer({

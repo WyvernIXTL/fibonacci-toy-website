@@ -2,11 +2,11 @@
 
 # `fibonacci-toy-website`
 
-**One more webpage to calculate lucky numbers.**
+**Calculate fibonacci numbers, fast, on the web!**
 
 </div>
 
-[![Screenshot](./images/screenshot_v1-0-0-fs8.png)](https://wyvernixtl.github.io/fibonacci-toy-website/)
+[![Screenshot](./images/screenshot_v1-0-0-fs8.png)](https://fibrs.pages.dev/)
 
 ## Building
 
