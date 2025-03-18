@@ -6,7 +6,7 @@
 
 import type { State } from 'vanjs-core';
 import van from 'vanjs-core';
-const { button, div, input, span, select, label, option, nav } = van.tags;
+const { button, div, input, select, label, option, nav } = van.tags;
 
 function naturalFromString(value: unknown): number | undefined {
   if (typeof value !== 'string') {
