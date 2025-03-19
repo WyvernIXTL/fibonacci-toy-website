@@ -5,7 +5,7 @@
  */
 
 import van from 'vanjs-core';
-const { span, nav, footer, a, i } = van.tags;
+const { span, nav, footer, a, img } = van.tags;
 
 export const Footer = () =>
   footer(
@@ -18,17 +18,17 @@ export const Footer = () =>
       a(
         {
           href: 'https://github.com/WyvernIXTL/fibonacci-toy-website/',
-          class: 'link link-hover',
+          class: 'link link-hover grid grid-flow-col',
         },
-        i({ class: 'small-padding' }, 'gite'),
-        span('Source'),
+        img({ class: 'h-6 w-6', src: './gite.svg' }),
+        span({ class: 'pl-1' }, 'Source'),
       ),
       a(
         {
           href: './WEBSITE-LICENSES.txt',
-          class: 'link link-hover',
+          class: 'link link-hover grid grid-flow-col',
         },
-        i({ class: 'small-padding' }, 'license'),
+        img({ class: 'h-6 w-6', src: './license.svg' }),
         span('Licenses'),
       ),
     ),
