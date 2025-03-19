@@ -9,12 +9,16 @@ const { span, nav, footer, a, i } = van.tags;
 
 export const Footer = () =>
   footer(
-    { class: 'fixed' },
+    {
+      class:
+        'footer footer-horizontal footer-center bg-base-200 text-base-content rounded p-10',
+    },
     nav(
-      { class: 'center-align' },
+      { class: 'grid grid-flow-col gap-4' },
       a(
         {
           href: 'https://github.com/WyvernIXTL/fibonacci-toy-website/',
+          class: 'link link-hover',
         },
         i({ class: 'small-padding' }, 'gite'),
         span('Source'),
@@ -22,6 +26,7 @@ export const Footer = () =>
       a(
         {
           href: './WEBSITE-LICENSES.txt',
+          class: 'link link-hover',
         },
         i({ class: 'small-padding' }, 'license'),
         span('Licenses'),
