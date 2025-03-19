@@ -4,7 +4,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import 'beercss';
 import van from 'vanjs-core';
 const { div, h1, main } = van.tags;
 
