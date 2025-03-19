@@ -76,25 +76,28 @@ van.derive(() => {
 
 van.add(
   document.body,
-  main(
-    { class: 'responsive' },
-    div({ class: 'space' }),
-    h1({ class: 'small' }, 'Fibonacci Calculator'),
-    div({ class: 'space' }),
-    NaturalInputWithSelectorAndGoButton({
-      input: input,
-      labelInput: 'Which n-th fibonacci?',
-      buttonClicked: buttonClicked,
-      selection: AlgorithmList,
-      labelSelection: 'Algorithm',
-      selected: selected,
-      focusOnLoad: true,
-      onGo: startCalculation,
-      onCancel: cancelCalculation,
-    }),
-    div({ class: 'medium-space' }),
-    spinnerElement,
-    outputElement,
+  div(
+    { class: 'flex-col flex h-screen w-screen justify-between' },
+    main(
+      { class: 'max-w-7xl w-full mx-auto mb-auto px-3' },
+      div({ class: 'my-6' }),
+      h1({ class: 'text-5xl' }, 'Fibonacci Calculator'),
+      div({ class: 'my-6' }),
+      NaturalInputWithSelectorAndGoButton({
+        input: input,
+        labelInput: 'Which n-th fibonacci?',
+        buttonClicked: buttonClicked,
+        selection: AlgorithmList,
+        labelSelection: 'Algorithm',
+        selected: selected,
+        focusOnLoad: true,
+        onGo: startCalculation,
+        onCancel: cancelCalculation,
+      }),
+      div({ class: 'my-8' }),
+      spinnerElement,
+      outputElement,
+    ),
+    Footer(),
   ),
-  Footer(),
 );
