@@ -4,6 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import './App.css';
 import van from 'vanjs-core';
 const { div, h1, main } = van.tags;
 

@@ -97,7 +97,7 @@ const GoButtonRight = (props: {
   );
   return button(
     {
-      class: () => `border right-round large ${buttonModeStyle.val}`,
+      class: () => `btn border right-round large ${buttonModeStyle.val}`,
       disabled: () => props.disabled.val,
       onclick: () => {
         props.clicked.val = !props.clicked.val;
