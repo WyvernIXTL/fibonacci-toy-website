@@ -10,10 +10,10 @@ $standard-element-height: 40px
 $round-radius: calc($standard-element-height / 2)
     
 :root
-    --primary-color: #be1d72
+    --primary-color: #ffadad
     --secondary-color: #f690c9
     --accent-color: #bec1fb
-    --neutral-color: #3a5eca
+    --neutral-color: #ffffff
     --text-color: #333333  /* don't know */
     --ultra-text-color:rgb(27, 27, 27)
     --error-color: #be1d1d
@@ -29,6 +29,12 @@ $round-radius: calc($standard-element-height / 2)
         --ultra-text-color:rgb(223, 223, 223)
         --error-color: #be1d1d
         --error-text: #ff2c2c
+
+@mixin invert-if-light()
+    @media (prefers-color-scheme: light)
+        filter: invert(100%)
+    @media (prefers-color-scheme: none)
+        filter: invert(100%)
 
 *
     color: var(--text-color)
@@ -71,6 +77,7 @@ body
             color: var(--ultra-text-color)
             padding: 10px
             height: $standard-element-height
+            border-style: solid
 
         button[class="right-rounded"]
             padding: 5px 15px 5px 10px
@@ -80,7 +87,11 @@ body
         
         button:disabled
             border-color: var(--primary-color)
-            filter: brightness(60%)
+            @media (prefers-color-scheme: dark)
+                filter: brightness(60%)
+            @media (prefers-color-scheme: light)
+                filter: brightness(80%)
+                opacity: 70%
 
         button[class~="cancel"]
             background-color: var(--neutral-color)
@@ -93,6 +104,9 @@ body
             color: var(--ultra-text-color)
             height: $standard-element-height
             padding: 0px 15px
+            border-style: solid
+            border-width: 2px
+            border-left: unset
         
         input
             background-color: var(--neutral-color)
@@ -100,6 +114,7 @@ body
             color: var(--ultra-text-color)
             height: $standard-element-height
             box-sizing: border-box
+            border-style: solid
 
         input:focus, select:focus
             outline: 0
@@ -188,6 +203,7 @@ body
         img[class~="icon"]
             width: 18pt
             height: 18pt
+            @include invert-if-light()
 
     footer
         display: flex
@@ -219,6 +235,7 @@ body
     img[class~="icon"]
         width: 18pt
         height: 18pt
+        @include invert-if-light()
 
 *[hidden]
     visibility: hidden
