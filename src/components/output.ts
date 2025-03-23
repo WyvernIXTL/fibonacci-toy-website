@@ -21,7 +21,7 @@ const TextAreaOutput = (props: {
 
   return div(
     { class: 'max' },
-    fieldset(
+    div(
       {
         class: 'max',
       },
