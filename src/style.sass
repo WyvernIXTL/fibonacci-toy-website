@@ -10,21 +10,25 @@ $standard-element-height: 40px
 $round-radius: calc($standard-element-height / 2)
     
 :root
-  --primary-color: #be1d72
-  --secondary-color: #f690c9
-  --accent-color: #bec1fb
-  --neutral-color: #3a5eca
-  --text-color: #333333  /* don't know */
-  --ultra-text-color:rgb(27, 27, 27)
+    --primary-color: #be1d72
+    --secondary-color: #f690c9
+    --accent-color: #bec1fb
+    --neutral-color: #3a5eca
+    --text-color: #333333  /* don't know */
+    --ultra-text-color:rgb(27, 27, 27)
+    --error-color: #be1d1d
+    --error-text: #ff2727
 
 @media (prefers-color-scheme: dark)
-  :root
-    --primary-color:#981645
-    --secondary-color: #df88b8
-    --accent-color: #bec1fb
-    --neutral-color:rgb(6, 10, 20)
-    --text-color:rgb(185, 185, 185) /*  don't know */
-    --ultra-text-color:rgb(223, 223, 223)
+    :root
+        --primary-color:#981645
+        --secondary-color: #df88b8
+        --accent-color: #bec1fb
+        --neutral-color:rgb(6, 10, 20)
+        --text-color:rgb(185, 185, 185) /*  don't know */
+        --ultra-text-color:rgb(223, 223, 223)
+        --error-color: #be1d1d
+        --error-text: #ff2c2c
 
 *
     color: var(--text-color)
@@ -97,9 +101,19 @@ body
             height: $standard-element-height
             box-sizing: border-box
 
-        input:focus
+        input:focus, select:focus
             outline: 0
-            box-shadow: 0 0 0 2px var(--primary-color)
+            box-shadow: 0 0 3px 3px var(--primary-color)
+
+        input[class~="invalid"]
+            border-color: var(--error-color)
+            border-style: dashed
+
+            + label
+                color: var(--error-text)
+
+            :focus
+                box-shadow: 0 0 3px 3px var(--error-color)
 
         fieldset
             display: flex

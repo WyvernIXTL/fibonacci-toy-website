@@ -43,7 +43,7 @@ const NaturalInputLeftRounded = (props: {
 
   const inputField = input({
     type: 'number',
-    class: 'left-rounded',
+    class: () => `left-rounded ${valid.val ? '' : 'invalid'}`,
     oninput: (e) => {
       props.input.val = naturalFromString(e.target?.value);
       once.val = true;
@@ -58,13 +58,13 @@ const NaturalInputLeftRounded = (props: {
 
   return fieldset(
     {
-      class: () => `max ${valid.val ? '' : 'invalid'}`,
+      class: 'max',
     },
     inputField,
     () =>
       valid.val
         ? props.label && label(props.label)
-        : label({ class: 'error' }, 'Not a natural number!'),
+        : label('Not a natural number!'),
   );
 };
 
