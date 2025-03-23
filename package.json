@@ -19,12 +19,9 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@rsbuild/core": "^1.2.14",
-    "@rsbuild/plugin-css-minimizer": "^1.0.2",
-    "cssnano-preset-advanced": "^7.0.6",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "beercss": "^3.9.7",
     "vanjs-core": "^1.5.3"
   }
 }
