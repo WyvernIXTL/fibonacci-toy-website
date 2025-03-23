@@ -1,4 +1,5 @@
 import { defineConfig } from '@rsbuild/core';
+import { pluginSass } from '@rsbuild/plugin-sass';
 
 // biome-ignore lint/style/noDefaultExport: <explanation>
 export default defineConfig({
@@ -10,7 +11,7 @@ export default defineConfig({
       description: 'Calculate fibonacci numbers, fast, on the web!',
     },
   },
-  plugins: [],
+  plugins: [pluginSass()],
   tools: {
     lightningcssLoader: true,
   },
