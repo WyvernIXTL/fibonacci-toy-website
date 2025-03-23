@@ -73,6 +73,10 @@ body
 
         button:hover
             filter: brightness(120%)
+        
+        button:disabled
+            border-color: var(--primary-color)
+            filter: brightness(60%)
 
         button[class~="cancel"]
             background-color: var(--neutral-color)
@@ -104,6 +108,10 @@ body
             margin: 0
             border: 0
 
+            label
+                font-size: small
+                padding-top: 8px
+
         .left-rounded
             border-top-left-radius: $round-radius
             border-bottom-left-radius: $round-radius
@@ -112,14 +120,11 @@ body
             padding: 0px 15px
 
         *[class~="left-rounded"] + *
-            padding: 0px 15px
+            padding-left: 15px
 
         .right-rounded
             border-top-right-radius: $round-radius
             border-bottom-right-radius: $round-radius
-
-        label[class~="helper"]
-            font-size: small
 
         textarea
             background-color: var(--neutral-color)

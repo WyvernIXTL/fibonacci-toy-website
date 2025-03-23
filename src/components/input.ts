@@ -63,7 +63,7 @@ const NaturalInputLeftRounded = (props: {
     inputField,
     () =>
       valid.val
-        ? props.label && label({ class: 'helper' }, props.label)
+        ? props.label && label(props.label)
         : label({ class: 'error' }, 'Not a natural number!'),
   );
 };
@@ -85,7 +85,7 @@ function SelectorSquare<Member extends string>(props: {
         option({ selected: () => props.selected.val === member }, member),
       ),
     ),
-    props.label && label({ class: 'helper' }, props.label),
+    props.label && label(props.label),
   );
 }
 

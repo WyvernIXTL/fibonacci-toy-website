@@ -33,7 +33,7 @@ const TextAreaOutput = (props: {
         },
         () => props.value.val,
       ),
-      label({ class: 'helper' }, props.helper),
+      label(props.helper),
     ),
     div(
       { class: 'right-align' },
