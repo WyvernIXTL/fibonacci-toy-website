@@ -8,7 +8,6 @@
 
 import './style.sass';
 import van from 'vanjs-core';
-const { div, h1, main } = van.tags;
 
 import type { State } from 'vanjs-core';
 import { Algorithm, AlgorithmList } from './calculation/calculation-mode.ts';
@@ -17,7 +16,6 @@ import type {
   FromWorkerMessage,
   ToWorkerMessage,
 } from './calculation/worker.ts';
-import { Footer } from './components/footer.ts';
 import { NaturalInputWithSelectorAndGoButton } from './components/input.ts';
 import { FibonacciNumberOutput, Spinner } from './components/output.ts';
 
@@ -65,7 +63,7 @@ function cancelCalculation(): void {
   }
 }
 
-const outputElement = FibonacciNumberOutput({
+const outputElements = FibonacciNumberOutput({
   result: van.derive(() => result.val ?? ''),
   n: n,
   calculatedInMs: duration,
@@ -73,30 +71,25 @@ const outputElement = FibonacciNumberOutput({
 const spinnerElement = Spinner();
 van.derive(() => {
   spinnerElement.hidden = !calculating.val;
-  outputElement.hidden = calculating.val || !result.val;
+  for (const e of outputElements) {
+    e.hidden = calculating.val || !result.val;
+  }
 });
 
 van.add(
-  document.body,
-  main(
-    { class: 'responsive' },
-    div({ class: 'space' }),
-    h1({ class: 'small' }, 'Fibonacci Calculator'),
-    div({ class: 'space' }),
-    NaturalInputWithSelectorAndGoButton({
-      input: input,
-      labelInput: 'Which n-th fibonacci?',
-      buttonClicked: buttonClicked,
-      selection: AlgorithmList,
-      labelSelection: 'Algorithm',
-      selected: selected,
-      focusOnLoad: true,
-      onGo: startCalculation,
-      onCancel: cancelCalculation,
-    }),
-    div({ class: 'medium-space' }),
-    spinnerElement,
-    outputElement,
-  ),
-  Footer(),
+  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+  document.getElementById('app')!,
+  NaturalInputWithSelectorAndGoButton({
+    input: input,
+    labelInput: 'Which n-th fibonacci?',
+    buttonClicked: buttonClicked,
+    selection: AlgorithmList,
+    labelSelection: 'Algorithm',
+    selected: selected,
+    focusOnLoad: true,
+    onGo: startCalculation,
+    onCancel: cancelCalculation,
+  }),
+  spinnerElement,
+  outputElements,
 );

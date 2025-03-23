@@ -7,7 +7,7 @@
  */
 
 import van, { type State } from 'vanjs-core';
-const { button, div, span, i, textarea, progress } = van.tags;
+const { button, div, i, textarea, progress, fieldset, label } = van.tags;
 
 const TextAreaOutput = (props: {
   value: State<string>;
@@ -19,19 +19,20 @@ const TextAreaOutput = (props: {
     copied.val = false;
   });
 
-  return div(
-    div(
+  return [
+    fieldset(
       {
-        class: 'field textarea round border extra',
+        class: 'max',
       },
       textarea(
         {
           readOnly: true,
-          style: 'word-break: break-all;',
+          disabled: true,
+          class: 'left-rounded right-rounded max hard-wrap',
         },
         () => props.value.val,
       ),
-      span({ class: 'helper' }, props.helper),
+      label({ class: 'helper' }, props.helper),
     ),
     div(
       { class: 'right-align' },
@@ -46,7 +47,7 @@ const TextAreaOutput = (props: {
         i(() => (copied.val ? 'check' : 'content_copy')),
       ),
     ),
-  );
+  ];
 };
 
 function timeStringFromMs(ms: number): string {

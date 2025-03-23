@@ -8,7 +8,7 @@
 
 import type { State } from 'vanjs-core';
 import van from 'vanjs-core';
-const { button, div, input, select, label, option, nav } = van.tags;
+const { button, input, select, label, option, nav, fieldset } = van.tags;
 
 function naturalFromString(value: unknown): number | undefined {
   if (typeof value !== 'string') {
@@ -43,6 +43,7 @@ const NaturalInputLeftRounded = (props: {
 
   const inputField = input({
     type: 'number',
+    class: 'left-rounded',
     oninput: (e) => {
       props.input.val = naturalFromString(e.target?.value);
       once.val = true;
@@ -55,9 +56,9 @@ const NaturalInputLeftRounded = (props: {
     inputField.addEventListener('keydown', props.eventListener);
   }
 
-  return div(
+  return fieldset(
     {
-      class: () => `field border left-round max ${valid.val ? '' : 'invalid'}`,
+      class: () => `max ${valid.val ? '' : 'invalid'}`,
     },
     inputField,
     () =>
@@ -72,8 +73,8 @@ function SelectorSquare<Member extends string>(props: {
   selected: State<Member>;
   label?: string;
 }): HTMLElement {
-  return div(
-    { class: 'field border no-round' },
+  return fieldset(
+    {},
     select(
       {
         oninput: (e) => {
@@ -94,12 +95,10 @@ const GoButtonRight = (props: {
   onGo: () => void;
   onCancel: () => void;
 }) => {
-  const buttonModeStyle = van.derive(() =>
-    props.clicked.val ? 'error-text' : 'fill',
-  );
+  const buttonModeStyle = van.derive(() => (props.clicked.val ? 'cancel' : ''));
   return button(
     {
-      class: () => `border right-round large ${buttonModeStyle.val}`,
+      class: () => `right-rounded width-6em ${buttonModeStyle.val}`,
       disabled: () => props.disabled.val,
       onclick: () => {
         props.clicked.val = !props.clicked.val;
@@ -109,7 +108,6 @@ const GoButtonRight = (props: {
           props.onCancel();
         }
       },
-      style: 'width: 6em;',
     },
     () => (props.clicked.val ? 'Cancel' : 'Go'),
   );
