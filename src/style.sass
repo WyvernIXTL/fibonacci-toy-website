@@ -128,9 +128,13 @@ body
                 font-size: small
                 padding-top: 6px
 
-        .left-rounded
+        @mixin left-rounded()
             border-top-left-radius: $round-radius
             border-bottom-left-radius: $round-radius
+            
+
+        .left-rounded
+            @include left-rounded
 
         input[class~="left-rounded"]
             padding: 0px 15px
@@ -138,9 +142,12 @@ body
         *[class~="left-rounded"] + *
             padding-left: 15px
 
-        .right-rounded
+        @mixin right-rounded()
             border-top-right-radius: $round-radius
             border-bottom-right-radius: $round-radius
+
+        .right-rounded
+            @include right-rounded
 
         textarea
             background-color: var(--neutral-color)
@@ -167,7 +174,20 @@ body
             display: flex
             justify-content: flex-end
 
+        button[class~="circle"]
+            width: $standard-element-height
+            height: $standard-element-height
+            display: flex
+            justify-content: center
+            align-items: center
+            padding: 0
+            @include left-rounded()
+            @include right-rounded()
+            
 
+        img[class~="icon"]
+            width: 18pt
+            height: 18pt
 
     footer
         display: flex
@@ -179,6 +199,26 @@ body
 
         *
             padding: 0 20px
+
+        a
+            text-decoration: none
+            display: flex
+            justify-content: center
+            align-items: center
+
+            span
+                text-decoration: underline
+
+            *
+                padding: 0 4px
+
+        [class~="smaller-gap"] *
+            padding: 0 2.5px
+
+
+    img[class~="icon"]
+        width: 18pt
+        height: 18pt
 
 *[hidden]
     visibility: hidden

@@ -7,7 +7,11 @@
  */
 
 import van, { type State } from 'vanjs-core';
-const { button, div, i, textarea, progress, fieldset, label } = van.tags;
+const { button, div, i, textarea, progress, label, img } = van.tags;
+
+const SvgLarge = (name: State<string>) => {
+  return img({ class: 'icon', src: () => `./${name.val}.svg` });
+};
 
 const TextAreaOutput = (props: {
   value: State<string>;
@@ -45,7 +49,7 @@ const TextAreaOutput = (props: {
             copied.val = true;
           },
         },
-        i(() => (copied.val ? 'check' : 'content_copy')),
+        SvgLarge(van.derive(() => (copied.val ? 'check' : 'content_copy'))),
       ),
     ),
   );
