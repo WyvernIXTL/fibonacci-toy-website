@@ -39,7 +39,7 @@ const TextAreaOutput = (props: {
       { class: 'right-align' },
       button(
         {
-          class: 'circle slow-ripple',
+          class: 'circle',
           onclick: () => {
             navigator.clipboard?.writeText(props.value.val);
             copied.val = true;
