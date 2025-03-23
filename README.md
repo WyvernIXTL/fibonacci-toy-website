@@ -15,9 +15,9 @@
 * [Rust](https://www.rust-lang.org/tools/install)
 * [`wasm32-unknown-unknown`](https://doc.rust-lang.org/nightly/rustc/platform-support/wasm32-unknown-unknown.html)  
   Installable via `rustup`: `rustup target add wasm32-unknown-unknown`
-* [Bun](https://bun.sh/)
+* [`npm`](https://nodejs.org/en)
 * [`wasm-pack`](https://rustwasm.github.io/wasm-pack/installer/)  
-  Installable via `bun`: `bun install -g wasm-pack`  
+  Installable via `npm`: `npm install -g wasm-pack`  
   Installable via `cargo`: `cargo install wasm-pack`
 
 ### Change
@@ -31,6 +31,6 @@ See [rsbuild docs](https://rsbuild.dev/guide/basic/static-deploy) for more.
 cd ./fibonacci-toy-rs-4-web
 wasm-pack build --release
 cd ..
-bun i
-bun run build
+npm ci
+npm run build
 ```
