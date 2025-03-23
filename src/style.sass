@@ -40,6 +40,7 @@ $round-radius: calc($standard-element-height / 2)
     color: var(--text-color)
     margin: 0
     border-color: var(--accent-color)
+    font-size: 13pt
 
 
 body
@@ -107,6 +108,9 @@ body
             border-style: solid
             border-width: 2px
             border-left: unset
+
+        select + label
+            padding: 0px 15px
         
         input
             background-color: var(--neutral-color)
@@ -140,7 +144,7 @@ body
             min-width: 40px
 
             label
-                font-size: small
+                font-size: 11pt 
                 padding-top: 6px
 
         @mixin left-rounded()
@@ -168,6 +172,8 @@ body
             background-color: var(--neutral-color)
             padding: 15px 15px
             resize: none
+            // font-size: 10pt
+            color: var(--ultra-text-color)
             
         textarea[class~="hard-wrap"]
             word-break: break-all
@@ -178,6 +184,10 @@ body
         div[class~="max"]
             display: flex
             flex-direction: column
+
+            label
+                font-size: 11pt 
+                padding-top: 6px
 
         *[disabled]
             border-color: calc( var(--accent-color) * 0.8  )
