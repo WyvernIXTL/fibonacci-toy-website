@@ -18,5 +18,6 @@ export default defineConfig({
   output: {
     // inlineScripts: true,
     // inlineStyles: true,
+    legalComments: 'none',
   },
 });

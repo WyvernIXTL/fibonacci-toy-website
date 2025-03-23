@@ -19,7 +19,8 @@ const TextAreaOutput = (props: {
     copied.val = false;
   });
 
-  return [
+  return div(
+    { class: 'max' },
     fieldset(
       {
         class: 'max',
@@ -47,7 +48,7 @@ const TextAreaOutput = (props: {
         i(() => (copied.val ? 'check' : 'content_copy')),
       ),
     ),
-  ];
+  );
 };
 
 function timeStringFromMs(ms: number): string {

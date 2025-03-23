@@ -132,6 +132,10 @@ body
         *[class~="max"]
             flex-grow: 1
 
+        div[class~="max"]
+            display: flex
+            flex-direction: column
+
         *[disabled]
             border-color: calc( var(--accent-color) * 0.8  )
 
@@ -151,6 +155,9 @@ body
 
         *
             padding: 0 20px
+
+*[hidden]
+    visibility: hidden
 
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button
   -webkit-appearance: none

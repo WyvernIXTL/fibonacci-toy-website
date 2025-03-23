@@ -71,9 +71,7 @@ const outputElements = FibonacciNumberOutput({
 const spinnerElement = Spinner();
 van.derive(() => {
   spinnerElement.hidden = !calculating.val;
-  for (const e of outputElements) {
-    e.hidden = calculating.val || !result.val;
-  }
+  outputElements.hidden = calculating.val || !result.val;
 });
 
 van.add(
