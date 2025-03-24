@@ -7,7 +7,7 @@
  */
 
 import van, { type State } from 'vanjs-core';
-const { button, div, i, textarea, progress, label, img } = van.tags;
+const { button, div, textarea, label, img } = van.tags;
 
 const SvgLarge = (name: State<string>) => {
   return img({ class: 'icon', src: () => `./${name.val}.svg` });
