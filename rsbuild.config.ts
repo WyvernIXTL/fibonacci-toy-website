@@ -6,7 +6,7 @@ export default defineConfig({
   html: {
     template: './src/index.html',
     title: 'Fibonacci Toy Website',
-    // inject: 'body',
+    inject: 'body',
     meta: {
       description: 'Calculate fibonacci numbers, fast, on the web!',
     },
@@ -16,7 +16,7 @@ export default defineConfig({
     lightningcssLoader: true,
   },
   output: {
-    // inlineScripts: true,
+    inlineScripts: true,
     inlineStyles: true,
     legalComments: 'none',
   },
