@@ -25,7 +25,7 @@ jobs:
           workspaces: './fibonacci-toy-rs-4-web -> target'
       - run: wasm-pack build --release
         working-directory: ./fibonacci-toy-rs-4-web
-      - run: npm ci
+      - run: npm i
       - run: npm run build
       - name: Deploy Webpage
         uses: cloudflare/wrangler-action@v3
