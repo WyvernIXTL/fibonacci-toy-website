@@ -48,6 +48,7 @@ const NaturalInputLeftRounded = (props: {
       props.input.val = naturalFromString(e.target?.value);
       once.val = true;
     },
+    name: 'fib-input',
   });
   if (props.focusOnLoad) {
     requestAnimationFrame(() => inputField.focus());
@@ -63,8 +64,8 @@ const NaturalInputLeftRounded = (props: {
     inputField,
     () =>
       valid.val
-        ? props.label && label(props.label)
-        : label('Not a natural number!'),
+        ? props.label && label({ for: 'fib-input' }, props.label)
+        : label({ for: 'fib-input' }, 'Not a natural number!'),
   );
 };
 
@@ -80,12 +81,13 @@ function SelectorSquare<Member extends string>(props: {
         oninput: (e) => {
           props.selected.val = e.target.value;
         },
+        name: 'algorithm-selector',
       },
       props.selection.map((member) =>
         option({ selected: () => props.selected.val === member }, member),
       ),
     ),
-    props.label && label(props.label),
+    props.label && label({ for: 'algorithm-selector' }, props.label),
   );
 }
 

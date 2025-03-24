@@ -10,7 +10,11 @@ import van, { type State } from 'vanjs-core';
 const { button, div, textarea, label, img } = van.tags;
 
 const SvgLarge = (name: State<string>) => {
-  return img({ class: 'icon', src: () => `./${name.val}.svg` });
+  return img({
+    class: 'icon',
+    src: () => `./${name.val}.svg`,
+    alt: () => name.val,
+  });
 };
 
 const TextAreaOutput = (props: {
