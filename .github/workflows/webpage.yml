@@ -17,8 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: rustup toolchain install stable
       - run: rustup target add wasm32-unknown-unknown
-      - uses: oven-sh/setup-bun@v2
-      - run: bun install -g wasm-pack
+      - run: npm install -g wasm-pack
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: ${{ github.ref == 'refs/heads/master' }}
@@ -26,8 +25,8 @@ jobs:
           workspaces: './fibonacci-toy-rs-4-web -> target'
       - run: wasm-pack build --release
         working-directory: ./fibonacci-toy-rs-4-web
-      - run: bun i
-      - run: bun run build
+      - run: npm ci
+      - run: npm run build
       - name: Deploy Webpage
         uses: cloudflare/wrangler-action@v3
         with:
