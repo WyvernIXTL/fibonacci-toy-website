@@ -89,8 +89,4 @@ export const FibonacciNumberOutput = (props: {
 };
 
 export const Spinner = () =>
-  div(
-    { class: 'center-align' },
-    div({ class: 'large-space' }),
-    progress({ class: 'large circle' }),
-  );
+  div({ class: 'center-spinner' }, div({ class: 'spinner' }));

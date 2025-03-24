@@ -218,13 +218,35 @@ body
             height: 18pt
             @include invert-if-light()
 
+        .spinner
+            border: 4px solid var(--text-color)
+            border-top: 4px solid var(--primary-color)
+            border-radius: 50%
+            width: $standard-element-height
+            height: $standard-element-height
+            animation: spin 1.2s linear infinite
+
+            @keyframes spin 
+                0%
+                    transform: rotate(0deg)
+                100%
+                    transform: rotate(360deg)
+
+        .center-spinner
+            display: flex
+            height: 200px
+            justify-content: center
+            align-items: center
+
+        .center-spinner[hidden]
+            display: none
+
     footer
         display: flex
         flex-direction: row
         justify-content: center
         align-items: center
         height: 50px
-        // border-top: 1px dotted var(--accent-color)
 
         *
             padding: 0 20px
