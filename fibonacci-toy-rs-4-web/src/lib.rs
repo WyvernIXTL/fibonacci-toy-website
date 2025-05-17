@@ -22,12 +22,12 @@ pub fn fibonacci_linear(n: u32) -> String {
     set_panic_hook();
 
     let mut a = Natural::from(1u32);
-    let mut b = Natural::from(1u32);
+    let mut b = Natural::from(0u32);
 
-    for _ in 2..n {
+    for _ in 0..n {
         a += &b;
         swap(&mut a, &mut b);
     }
 
-    return format!("{}", b);
+    format!("{}", b)
 }

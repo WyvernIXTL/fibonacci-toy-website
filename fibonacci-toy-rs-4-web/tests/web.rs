@@ -11,5 +11,12 @@ wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
 fn test_fibonacci_linear() {
-    assert!(fibonacci_linear(30) == "832040")
+    assert!(fibonacci_linear(0) == "0");
+    assert!(fibonacci_linear(1) == "1");
+    assert!(fibonacci_linear(2) == "1");
+    assert!(fibonacci_linear(3) == "2");
+    assert!(fibonacci_linear(4) == "3");
+    assert!(fibonacci_linear(5) == "5");
+    assert!(fibonacci_linear(6) == "8");
+    assert!(fibonacci_linear(30) == "832040");
 }
