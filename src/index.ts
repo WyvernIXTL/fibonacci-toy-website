@@ -43,7 +43,11 @@ function onFinishedCalculation(worker: Worker) {
 onFinishedCalculation(worker);
 
 function startCalculation(): void {
-  if (input.val && !calculating.val) {
+  if (
+    input.val !== null &&
+    typeof input.val !== 'undefined' &&
+    !calculating.val
+  ) {
     n.val = input.val;
     calculating.val = true;
     const workerMessage: ToWorkerMessage = {
